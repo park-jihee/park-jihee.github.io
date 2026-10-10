@@ -47,7 +47,8 @@
     --radius-md: 1rem;
     --radius-lg: 1.5rem;
     --shadow-card: rgba(0, 0, 0, .1) 0 4px 6px -1px, rgba(0, 0, 0, .06) 0 2px 4px -1px;
-    --layout-max-width: 1440px;
+    --layout-max-width: 1300px;
+    --sidebar-width: 254px;
 }
 
 
@@ -1748,23 +1749,21 @@ a {
     display: none;
 }
 
-/* Same columns as the main page: left 3/12 (table of contents), right 9/12 (post) */
+/* Same columns as the main page: fixed-width left column (table of contents), post fills the rest */
 @media (min-width: 1024px) {
     .article-wrap {
         display: grid;
-        grid-template-columns: repeat(12, minmax(0, 1fr));
+        grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
         gap: 1.5rem;
         align-items: start;
     }
 
     .article-wrap__aside {
         display: block;
-        grid-column: span 3/span 3;
         align-self: stretch;
     }
 
     .article-wrap > .article {
-        grid-column: span 9/span 9;
         width: 100%;
     }
 }
@@ -2816,9 +2815,15 @@ html:not(.dark-mode) .hljs-params {
     background-color: var(--secondary-bg);
 }
 
+/* Main page: fixed-width left sidebar, posts fill the rest */
 @media (min-width: 1024px) {
-    .sidebar--left + .content-center {
-        grid-column: span 9/span 9;
+    .content--sidebar-left {
+        grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    }
+
+    .content--sidebar-left > .sidebar,
+    .content--sidebar-left > .content-center {
+        grid-column: auto;
     }
 }
 
