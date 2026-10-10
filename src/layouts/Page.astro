@@ -1,5 +1,6 @@
 ---
 import Layout from './Layout.astro';
+import FloatingTOC from '@components/FloatingTOC.astro';
 import siteConfig from '@config/site';
 import {
   type PageEntry,
@@ -13,10 +14,12 @@ import { useTranslations, useTranslatedPath } from '@i18n/utils';
 const {
   entry,
   Content,
+  headings = [],
   alternates = [],
 }: {
   entry: PageEntry;
   Content: any;
+  headings?: Array<{ depth: number; slug: string; text: string }>;
   alternates?: Array<{ lang: string; url: string }>;
 } = Astro.props;
 
@@ -42,7 +45,11 @@ const aboutHref = await (async () => {
   description={entry.data.description}
   alternates={alternates}
 >
-  <div class="article-wrap">
+  <div class="article-wrap article-wrap--with-aside">
+    <aside class="article-wrap__aside">
+      {headings.length > 0 && <FloatingTOC headings={headings} lang={lang} />}
+    </aside>
+
     <div class="article">
       <article>
         <div class="article__head">

@@ -70,6 +70,6 @@ const alternates = (() => {
   return entries;
 })();
 
-const { Content } = await entry.render();
+const { Content, headings } = await entry.render();
 ---
-<PageLayout entry={entry} Content={Content} alternates={alternates} />
+<PageLayout entry={entry} Content={Content} headings={headings} alternates={alternates} />
