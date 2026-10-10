@@ -109,6 +109,10 @@ const alternates = (() => {
   enableCodeHighlight
 >
   <div class="article-wrap">
+    <aside class="article-wrap__aside">
+      {headings.length > 0 && <FloatingTOC headings={headings} lang={lang} />}
+    </aside>
+
     <div class="article">
       <article>
         <div class="article__head">
@@ -165,8 +169,6 @@ const alternates = (() => {
       </article>
     </div>
   </div>
-
-  {headings.length > 0 && <FloatingTOC headings={headings} lang={lang} />}
 
   {siteConfig.features.imageLightbox && (
     <>

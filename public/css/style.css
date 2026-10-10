@@ -1744,6 +1744,31 @@ a {
     padding: 2rem 0;
 }
 
+.article-wrap__aside {
+    display: none;
+}
+
+/* Same columns as the main page: left 3/12 (table of contents), right 9/12 (post) */
+@media (min-width: 1024px) {
+    .article-wrap {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    .article-wrap__aside {
+        display: block;
+        grid-column: span 3/span 3;
+        align-self: stretch;
+    }
+
+    .article-wrap > .article {
+        grid-column: span 9/span 9;
+        width: 100%;
+    }
+}
+
 .article__category {
     margin-bottom: .5rem;
 }

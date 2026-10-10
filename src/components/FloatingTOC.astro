@@ -1,4 +1,5 @@
 ---
+import Icon from '@components/Icon.astro';
 import { useTranslations } from '@i18n/utils';
 import type { LocaleCode } from '@config/locales';
 
@@ -19,7 +20,7 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
 {tocHeadings.length > 0 && (
   <aside class="floating-toc" aria-label="Table of contents">
     <div class="floating-toc__inner">
-      <div class="floating-toc__header">{t('ui.contents')}</div>
+      <div class="floating-toc__header title"><Icon name="toc" class="icon" /> {t('ui.contents')}</div>
       <nav class="floating-toc__nav">
         {tocHeadings.map((heading) => (
           <a
@@ -36,27 +37,17 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
 )}
 
 <style>
-  /* Sits right of the post card, which spans the header width (--layout-max-width).
-     Hidden when the gutter is too narrow to fit it. */
-  @media (max-width: 1619px) {
-    .floating-toc {
-      display: none;
-    }
-  }
-
+  /* Lives in the post page's left column (.article-wrap__aside); hidden with it below 1024px. */
   .floating-toc {
-    position: fixed;
-    top: 50%;
-    left: calc(50% + var(--layout-max-width) / 2 + 1rem);
-    transform: translateY(-50%);
-    width: 220px;
+    position: sticky;
+    top: 4rem;
     max-height: 70vh;
     z-index: 10;
     animation: fadeIn 0.3s ease-out;
   }
 
   .floating-toc__inner {
-    padding: 1.5rem 0;
+    padding: 0;
     overflow-y: auto;
     max-height: 70vh;
     scrollbar-width: thin;
@@ -77,14 +68,10 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
   }
 
   .floating-toc__header {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-color);
-    opacity: 0.5;
-    margin-bottom: 1rem;
-    padding-left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    margin-bottom: .75rem;
   }
 
   .floating-toc__nav {
@@ -132,11 +119,11 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(-50%) translateX(10px);
+      transform: translateX(-10px);
     }
     to {
       opacity: 1;
-      transform: translateY(-50%) translateX(0);
+      transform: translateX(0);
     }
   }
 </style>
