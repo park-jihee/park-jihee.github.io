@@ -16,8 +16,9 @@ const DEFAULT_POST_SORT = (a: PostEntry, b: PostEntry) =>
   b.data.date.getTime() - a.data.date.getTime();
 
 const CATEGORY_PLACEHOLDERS: Record<string, string> = {
-  blog: '/img/posts/placeholder-blog.svg',
-  technology: '/img/posts/placeholder-technology.svg',
+  odoo: '/img/posts/placeholder-technology.svg',
+  ai: '/img/posts/placeholder-technology.svg',
+  dev: '/img/posts/placeholder-blog.svg',
   projects: '/img/posts/placeholder-projects.svg',
 };
 
@@ -80,7 +81,7 @@ const categoryPathSegmentCache = new Map<string, string>();
 
 function derivePostMeta(entry: PostEntry) {
   const segments = entry.slug.split('/');
-  const [lang = DEFAULT_LOCALE, category = 'blog', ...rest] = segments;
+  const [lang = DEFAULT_LOCALE, category = 'odoo', ...rest] = segments;
   const fallbackKey = rest.length > 0 ? rest.join('/') : entry.id;
   const translationKey = fallbackKey;
 
