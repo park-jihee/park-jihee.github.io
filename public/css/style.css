@@ -1711,11 +1711,7 @@ a {
 
     max-width: 100%;
     margin: 0 auto;
-    padding: 3rem 1.5rem;
-
-    border-radius: var(--radius-lg);
-    background-color: var(--context-bg);
-    box-shadow: var(--shadow-card);
+    padding: 0;
 }
 
 .article article {
@@ -1723,11 +1719,6 @@ a {
     margin: 0 auto;
 }
 
-@media (min-width: 768px) {
-    .article {
-        padding: 3rem;
-    }
-}
 
 .article h1,
 .article .h1 {
@@ -1751,7 +1742,7 @@ a {
 
 /* Same columns as the main page: fixed-width left column (table of contents), post fills the rest */
 @media (min-width: 1024px) {
-    .article-wrap {
+    .article-wrap--with-aside {
         display: grid;
         grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
         gap: 1.5rem;
@@ -1763,7 +1754,7 @@ a {
         align-self: stretch;
     }
 
-    .article-wrap > .article {
+    .article-wrap--with-aside > .article {
         width: 100%;
     }
 }
