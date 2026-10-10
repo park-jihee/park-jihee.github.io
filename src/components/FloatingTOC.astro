@@ -36,7 +36,9 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
 )}
 
 <style>
-  @media (max-width: 1400px) {
+  /* Sits right of the post card, which spans the header width (--layout-max-width).
+     Hidden when the gutter is too narrow to fit it. */
+  @media (max-width: 1619px) {
     .floating-toc {
       display: none;
     }
@@ -45,7 +47,7 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
   .floating-toc {
     position: fixed;
     top: 50%;
-    right: 2rem;
+    left: calc(50% + var(--layout-max-width) / 2 + 1rem);
     transform: translateY(-50%);
     width: 220px;
     max-height: 70vh;
@@ -125,20 +127,6 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  @media (min-width: 1600px) {
-    .floating-toc {
-      right: max(2rem, calc((100vw - 1200px) / 2 - 280px));
-      width: 280px;
-    }
-  }
-
-  @media (min-width: 1920px) {
-    .floating-toc {
-      right: calc((100vw - 1200px) / 2 - 320px);
-      width: 300px;
-    }
   }
 
   @keyframes fadeIn {

@@ -1708,7 +1708,7 @@ a {
 .article {
     font-family: var(--font-sans);
 
-    max-width: 56rem;
+    max-width: 100%;
     margin: 0 auto;
     padding: 3rem 1.5rem;
 
@@ -1718,8 +1718,14 @@ a {
 }
 
 .article article {
-    max-width: 42rem;
+    max-width: 100%;
     margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .article {
+        padding: 3rem;
+    }
 }
 
 .article h1,
