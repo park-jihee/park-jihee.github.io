@@ -1,5 +1,5 @@
 :root {
-    --main-bg: #f2f2f2; /* Light gray instead of dark */
+    --main-bg: #ffffff;
     --secondary-bg: #e5e5e5; /* Slightly darker than background, but lighter than in dark theme */
     --context-bg: #ffffff; /* White for context elements */
     --border-color: #dcdcdc; /* Light gray border */
