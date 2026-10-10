@@ -129,7 +129,7 @@ const siteConfig: SiteConfig = {
     rss: true,
     sitemap: true,
     imageLightbox: true,
-    postNavigation: true,
+    postNavigation: false,
     readingTime: true,
     viewCounter: false,
   },
