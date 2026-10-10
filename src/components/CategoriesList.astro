@@ -10,6 +10,11 @@ import { DEFAULT_LOCALE } from '@lib/language';
 import { ensureTrailingSlash } from '@utils/url';
 import { getLangFromUrl, useTranslatedPath } from '@i18n/utils';
 
+interface CategoriesListProps {
+  variant?: 'list' | 'header' | 'mobile';
+}
+
+const { variant = 'list' }: CategoriesListProps = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const translatePath = useTranslatedPath(lang);
 
@@ -38,8 +43,28 @@ const links = getEnabledCategoryIds()
 
 const currentPath = ensureTrailingSlash(Astro.url.pathname);
 ---
-<div class="tags__list">
-  {links.map((link) => (
-    <a href={link.href} data-active={link.href === currentPath ? 'true' : 'false'}>{link.label} ({link.count})</a>
-  ))}
-</div>
+{variant === 'header' ? (
+  <nav class="header__categories" aria-label="Categories">
+    {links.map((link) => (
+      <a
+        href={link.href}
+        class="header__category"
+        data-active={currentPath.startsWith(link.href) ? 'true' : 'false'}
+      >
+        {link.label}
+      </a>
+    ))}
+  </nav>
+) : variant === 'mobile' ? (
+  links.map((link) => (
+    <a href={link.href} class="mobile-menu__link">
+      {link.label}
+    </a>
+  ))
+) : (
+  <div class="tags__list">
+    {links.map((link) => (
+      <a href={link.href} data-active={link.href === currentPath ? 'true' : 'false'}>{link.label} ({link.count})</a>
+    ))}
+  </div>
+)}

@@ -1,6 +1,5 @@
 ---
 import Layout from './Layout.astro';
-import CategoriesList from '@components/CategoriesList.astro';
 import ProfileCard from '@components/layout/ProfileCard.astro';
 import ContactLinks from '@components/layout/ContactLinks.astro';
 import FooterCopy from '@components/layout/FooterCopy.astro';
@@ -255,12 +254,46 @@ if (defaultAlternate) {
   alternates={alternates}
 >
   <div class="content">
-    <aside class="aside aside--left">
-      <div class="tags tags--desktop">
-        <div class="tags__top"><span class="icon">🏷️</span> {t('ui.categories')}</div>
-        <CategoriesList />
-      </div>
-    </aside>
+    <div class="sidebar sidebar--left">
+      <ProfileCard
+        className="sidebar__profile"
+        title={t('ui.profile')}
+        description={t('ui.description')}
+        profileHref={aboutHref}
+        avatarSrc={siteConfig.author.avatar}
+        alt={t('name')}
+      />
+
+      {projectLinks.length > 0 && (
+        <div class="service sidebar__service">
+          <div class="title service__title">
+            <span class="icon">🌟</span> {t('ui.projects')}
+          </div>
+          <div class="box-links service__box-links">
+            {projectLinks.map((project) => (
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="box-links__link"
+                data-project-id={project.id}
+              >
+                {project.iconSvg ? (
+                  <span class="icon" aria-hidden="true" set:html={project.iconSvg}></span>
+                ) : project.icon ? (
+                  <span class="icon" aria-hidden="true">{project.icon}</span>
+                ) : null}
+                <span class="box-links__link-name">{project.label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <ContactLinks className="sidebar__contact" title={t('ui.contacts')} links={contactLinks} />
+
+      <FooterCopy className="sidebar__footer" />
+    </div>
 
     <div class="content-center">
      <form class="search form hidden" onsubmit="event.preventDefault();">
@@ -274,11 +307,6 @@ if (defaultAlternate) {
         />
       </form>
       <div id="search-results" style="display: none;"></div>
-
-      <div class="tags tags--mob">
-        <div class="tags__top"><span class="icon">🏷️</span> {t('ui.categories')}</div>
-        <CategoriesList />
-      </div>
 
       <div class="filter">
         <div class="filter__categories categories">
@@ -348,45 +376,5 @@ if (defaultAlternate) {
 
     </div>
 
-    <div class="sidebar">
-      <ProfileCard
-        className="sidebar__profile"
-        title={t('ui.profile')}
-        description={t('ui.description')}
-        profileHref={aboutHref}
-        avatarSrc={siteConfig.author.avatar}
-        alt={t('name')}
-      />
-
-      {projectLinks.length > 0 && (
-        <div class="service sidebar__service">
-          <div class="title service__title">
-            <span class="icon">🌟</span> {t('ui.projects')}
-          </div>
-          <div class="box-links service__box-links">
-            {projectLinks.map((project) => (
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="box-links__link"
-                data-project-id={project.id}
-              >
-                {project.iconSvg ? (
-                  <span class="icon" aria-hidden="true" set:html={project.iconSvg}></span>
-                ) : project.icon ? (
-                  <span class="icon" aria-hidden="true">{project.icon}</span>
-                ) : null}
-                <span class="box-links__link-name">{project.label}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <ContactLinks className="sidebar__contact" title={t('ui.contacts')} links={contactLinks} />
-
-      <FooterCopy className="sidebar__footer" />
-    </div>
   </div>
 </Layout>

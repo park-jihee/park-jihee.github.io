@@ -1,6 +1,7 @@
 ---
 import LanguageSwitcher from '@components/LanguageSwitcher.astro';
 import NavLinks from '@components/layout/NavLinks.astro';
+import CategoriesList from '@components/CategoriesList.astro';
 
 type NavItem = {
   id: string;
@@ -39,7 +40,10 @@ const {
 ---
 <header class="header">
   <div class="cont flex">
-    <div class="header__text-logo"><a href={homeHref} class="header__text-logo">{siteTitle}</a></div>
+    <div class="header__left">
+      <div class="header__text-logo"><a href={homeHref} class="header__text-logo">{siteTitle}</a></div>
+      <CategoriesList variant="header" />
+    </div>
     <div class="header__nav">
       {showSearch && (
         <button type="button" class="header__search-toggle" aria-label="Toggle search">
