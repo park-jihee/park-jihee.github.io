@@ -1,0 +1,11 @@
+---
+// Google Material Symbols (Rounded). `name` is the icon name from https://fonts.google.com/icons
+// New icons must also be added to ICON_NAMES in src/components/layout/PageHead.astro.
+interface IconProps {
+  name: string;
+  class?: string;
+}
+
+const { name, class: className }: IconProps = Astro.props;
+---
+<span class:list={['material-symbols-rounded', className]} aria-hidden="true">{name}</span>

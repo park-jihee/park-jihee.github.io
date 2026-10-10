@@ -54,14 +54,14 @@ const siteConfig: SiteConfig = {
         ko: 'Email',
       },
       url: 'mailto:parkjihee@ecodoobiz.com',
-      icon: '✉️',
+      icon: 'mail',
     },
     // TODO: LinkedIn, velog, 회사 사이트 주소가 정해지면 추가
     // {
     //   id: 'velog',
     //   label: { ko: 'velog' },
     //   url: 'https://velog.io/@아이디',
-    //   icon: '📝',
+    //   icon: 'edit_note',
     // },
   ],
 
@@ -71,7 +71,7 @@ const siteConfig: SiteConfig = {
     odoo: {
       enabled: true,
       path: '/odoo',
-      icon: '🧩',
+      icon: 'extension',
       label: {
         ko: 'Odoo',
       },
@@ -82,7 +82,7 @@ const siteConfig: SiteConfig = {
     ai: {
       enabled: true,
       path: '/ai',
-      icon: '🤖',
+      icon: 'smart_toy',
       label: {
         ko: 'AI',
       },
@@ -93,7 +93,7 @@ const siteConfig: SiteConfig = {
     dev: {
       enabled: true,
       path: '/dev',
-      icon: '💻',
+      icon: 'code',
       label: {
         ko: '개발',
       },
@@ -104,7 +104,7 @@ const siteConfig: SiteConfig = {
     projects: {
       enabled: true,
       path: '/projects',
-      icon: '🛠️',
+      icon: 'build',
       label: {
         ko: '프로젝트',
       },

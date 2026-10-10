@@ -1,4 +1,5 @@
 ---
+import Icon from '@components/Icon.astro';
 import Layout from '@layouts/Layout.astro';
 import siteConfig from '@config/site';
 import { useTranslations, useTranslatedPath } from '@i18n/utils';
@@ -29,7 +30,7 @@ const t = useTranslations(locale);
     <div class="sect404__wrapper">
       <div class="sect404__top">
         <div>4</div>
-        <span class="icon">🤔</span>
+        <Icon name="sentiment_dissatisfied" class="icon" />
         <div>4</div>
       </div>
 
@@ -37,7 +38,7 @@ const t = useTranslations(locale);
       <div class="article__category category">
         <div class="category__item category__item--light-blue">
           <a class="category__item category__item--light-blue" href={translatePath('/')}>
-            💻 {siteConfig.title[locale] ?? siteConfig.title[DEFAULT_LOCALE]}
+            <Icon name="home" /> {siteConfig.title[locale] ?? siteConfig.title[DEFAULT_LOCALE]}
           </a>
         </div>
       </div>

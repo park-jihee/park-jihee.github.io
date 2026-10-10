@@ -1,4 +1,5 @@
 ---
+import Icon from '@components/Icon.astro';
 import Layout from './Layout.astro';
 import AIWarning from '@components/AIWarning.astro';
 import FloatingTOC from '@components/FloatingTOC.astro';
@@ -141,7 +142,7 @@ const alternates = (() => {
                     class="category__item category__item--light-blue"
                     href={translatePath(getCategoryPath(categoryKey))}
                   >
-                    {categoryConfig?.icon} {categoryLabel}
+                    {categoryConfig?.icon && <Icon name={categoryConfig.icon} />} {categoryLabel}
                   </a>
                 </div>
               )}
@@ -157,8 +158,8 @@ const alternates = (() => {
 
         {siteConfig.features.postNavigation && (
           <div class="post-navigation">
-            <a href={translatePath('/')}>← {t('ui.back')}</a>
-            <a href="#" class="scroll-top">↑ {t('ui.top')}</a>
+            <a href={translatePath('/')}><Icon name="arrow_back" /> {t('ui.back')}</a>
+            <a href="#" class="scroll-top"><Icon name="arrow_upward" /> {t('ui.top')}</a>
           </div>
         )}
       </article>

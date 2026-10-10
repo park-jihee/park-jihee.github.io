@@ -189,7 +189,7 @@ const renderResults = (
       const categoryText = post.categoryText ?? post.category ?? '';
       const categoryHtml =
         post.category && post.icon
-          ? `<div class="post__category category"><div class="category__item category__item--light-blue">${post.icon} ${categoryText}</div></div>`
+          ? `<div class="post__category category"><div class="category__item category__item--light-blue"><span class="material-symbols-rounded" aria-hidden="true">${post.icon}</span> ${categoryText}</div></div>`
           : '';
       const imageHtml = post.imageUrl
         ? `<div class="post__thumbnail"><picture><img src="${post.imageUrl}" alt=""></picture></div>`

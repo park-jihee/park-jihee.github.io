@@ -57,7 +57,7 @@ export async function GET() {
         : `${siteConfig.siteUrl}${image}`;
     })(),
     category: getPostCategory(entry),
-    icon: siteConfig.categories[getPostCategory(entry)]?.icon ?? '📂',
+    icon: siteConfig.categories[getPostCategory(entry)]?.icon ?? 'folder',
     lang: getPostLanguage(entry),
     categoryText:
       siteConfig.categories[getPostCategory(entry)]?.label?.[getPostLanguage(entry)] ??

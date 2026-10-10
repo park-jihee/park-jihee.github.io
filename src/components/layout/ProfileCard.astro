@@ -1,4 +1,5 @@
 ---
+import Icon from '@components/Icon.astro';
 interface ProfileCardProps {
   title: string;
   description: string;
@@ -15,7 +16,7 @@ const {
   profileHref,
   avatarSrc,
   alt,
-  icon = '💻',
+  icon = 'person',
   className,
 }: ProfileCardProps = Astro.props;
 
@@ -33,7 +34,7 @@ const classNames = ['profile', ...baseClasses.filter(Boolean)];
 ---
 <div class={classNames.join(' ')}>
   <div class="profile__title title">
-    <span class="icon">{icon}</span> {title}
+    <Icon name={icon} class="icon" /> {title}
   </div>
   <div class="profile__content">
     <div class="profile__content-top">

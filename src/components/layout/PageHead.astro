@@ -1,4 +1,26 @@
 ---
+// Material Symbols used on the site (Google Fonts requires alphabetical order).
+const ICON_NAMES = [
+  'arrow_back',
+  'arrow_forward',
+  'arrow_upward',
+  'build',
+  'chat',
+  'code',
+  'dark_mode',
+  'edit_note',
+  'extension',
+  'folder',
+  'home',
+  'light_mode',
+  'mail',
+  'menu',
+  'person',
+  'search',
+  'sentiment_dissatisfied',
+  'smart_toy',
+  'star',
+];
 import siteConfig from '@config/site';
 import { getOgLocale, resolveLocaleDefinition } from '@config/locales';
 import { DEFAULT_LOCALE, listNonDefaultLocales } from '@lib/language';
@@ -85,6 +107,10 @@ const modifiedTime = modifiedAt ?? publishedTime;
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href={`https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0&icon_names=${ICON_NAMES.join(',')}&display=block`}
+  />
   <link rel="stylesheet" href="/css/style.css" />
   {enableCodeHighlight && (
     <>

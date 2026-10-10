@@ -1,4 +1,5 @@
 ---
+import Icon from '@components/Icon.astro';
 import Layout from './Layout.astro';
 import ProfileCard from '@components/layout/ProfileCard.astro';
 import ContactLinks from '@components/layout/ContactLinks.astro';
@@ -171,7 +172,7 @@ const currentCategoryLabel = categoryMeta
     categoryMeta.label?.[DEFAULT_LOCALE] ??
     categoryId
   : t('ui.all_posts');
-const categoryIcon = categoryMeta?.icon ?? '📂';
+const categoryIcon = categoryMeta?.icon ?? 'folder';
 const categoryDescription = categoryMeta?.description?.[lang] ?? null;
 
 const currentPageNumber = page.currentPage ?? 1;
@@ -267,7 +268,7 @@ if (defaultAlternate) {
       {projectLinks.length > 0 && (
         <div class="service sidebar__service">
           <div class="title service__title">
-            <span class="icon">🌟</span> {t('ui.projects')}
+            <Icon name="star" class="icon" /> {t('ui.projects')}
           </div>
           <div class="box-links service__box-links">
             {projectLinks.map((project) => (
@@ -281,7 +282,7 @@ if (defaultAlternate) {
                 {project.iconSvg ? (
                   <span class="icon" aria-hidden="true" set:html={project.iconSvg}></span>
                 ) : project.icon ? (
-                  <span class="icon" aria-hidden="true">{project.icon}</span>
+                  <Icon name={project.icon} class="icon" />
                 ) : null}
                 <span class="box-links__link-name">{project.label}</span>
               </a>
@@ -298,7 +299,7 @@ if (defaultAlternate) {
     <div class="content-center">
      <form class="search form hidden" onsubmit="event.preventDefault();">
         <div class="search__top">
-          <span class="search__top-icon">🔎</span> {t('ui.search')}
+          <Icon name="search" class="search__top-icon" /> {t('ui.search')}
         </div>
         <input
           type="text"
@@ -311,7 +312,7 @@ if (defaultAlternate) {
       <div class="filter">
         <div class="filter__categories categories">
           <div class="categories__wrapper">
-            <span aria-hidden="true">{categoryIcon}</span>
+            <Icon name={categoryIcon} />
             <h1 class="categories__wrapper">{currentCategoryLabel}</h1>
           </div>
 
@@ -332,7 +333,7 @@ if (defaultAlternate) {
           <a href={post.url} class="post">
             {shouldShowCategories && siteConfig.categories[post.category] && (
               <div class="post__category category">
-                <div class="category__item category__item--light-blue">{siteConfig.categories[post.category].icon} {post.categoryLabel}</div>
+                <div class="category__item category__item--light-blue"><Icon name={siteConfig.categories[post.category].icon} /> {post.categoryLabel}</div>
               </div>
             )}
 
@@ -360,7 +361,7 @@ if (defaultAlternate) {
 
       <div class="pagination">
         {page.url.prev ? (
-          <a class="pagination__link" href={page.url.prev}>← {t('ui.prev')}</a>
+          <a class="pagination__link" href={page.url.prev}><Icon name="arrow_back" /> {t('ui.prev')}</a>
         ) : (
           <span class="pagination__link disabled" style="visibility: hidden;">{t('ui.prev')}</span>
         )}
@@ -368,7 +369,7 @@ if (defaultAlternate) {
         <span class="pagination__text">{page.currentPage} / {page.lastPage}</span>
 
         {page.url.next ? (
-          <a class="pagination__link" href={page.url.next}>{t('ui.next')} →</a>
+          <a class="pagination__link" href={page.url.next}>{t('ui.next')} <Icon name="arrow_forward" /></a>
         ) : (
           <span class="pagination__link disabled" style="visibility: hidden;">{t('ui.next')}</span>
         )}

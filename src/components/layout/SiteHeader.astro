@@ -1,4 +1,5 @@
 ---
+import Icon from '@components/Icon.astro';
 import LanguageSwitcher from '@components/LanguageSwitcher.astro';
 import NavLinks from '@components/layout/NavLinks.astro';
 import CategoriesList from '@components/CategoriesList.astro';
@@ -47,19 +48,19 @@ const {
     <div class="header__nav">
       {showSearch && (
         <button type="button" class="header__search-toggle" aria-label="Toggle search">
-          <span class="header__search-icon">🔎</span>
+          <Icon name="search" class="header__search-icon" />
         </button>
       )}
       {enableDarkMode && (
         <button type="button" class="header__theme-mode-switcher theme-mode-switcher" data-mode="light">
-          <span class="theme-mode-switcher__icon icon-dark">🌙</span>
-          <span class="theme-mode-switcher__icon icon-light">☀️</span>
+          <Icon name="dark_mode" class="theme-mode-switcher__icon icon-dark" />
+          <Icon name="light_mode" class="theme-mode-switcher__icon icon-light" />
         </button>
       )}
       <NavLinks navItems={navItems} />
       <LanguageSwitcher lang={lang} options={languageOptions} />
       <button type="button" class="header__menu-toggle" aria-label="Toggle menu">
-        <span class="header__menu-icon">☰</span>
+        <Icon name="menu" class="header__menu-icon" />
       </button>
     </div>
   </div>
