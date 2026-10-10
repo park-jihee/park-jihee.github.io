@@ -5,9 +5,8 @@
 
   try {
     const stored = localStorage.getItem(storageKey);
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isStored = stored === 'dark' || stored === 'light';
-    const mode = isStored ? stored : prefersDark ? 'dark' : 'light';
+    const mode = isStored ? stored : 'light';
 
     if (mode === 'dark') {
       doc.classList.add(darkClass);

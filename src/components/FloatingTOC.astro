@@ -116,10 +116,8 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
     background: linear-gradient(to right, rgba(0, 0, 0, 0.02), transparent);
   }
 
-  @media (prefers-color-scheme: dark) {
-    .floating-toc__link.active {
-      background: linear-gradient(to right, rgba(255, 255, 255, 0.02), transparent);
-    }
+  :global(.dark-mode) .floating-toc__link.active {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.02), transparent);
   }
 
   .floating-toc__text {

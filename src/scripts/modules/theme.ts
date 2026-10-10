@@ -11,7 +11,7 @@ const detectPreferredMode = (): ThemeMode => {
     return stored;
   }
 
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return 'light';
 };
 
 const updateSwitcherState = (mode: ThemeMode) => {
@@ -27,25 +27,6 @@ const applyThemeMode = (mode: ThemeMode) => {
   localStorage.setItem(THEME_STORAGE_KEY, mode);
   updateSwitcherState(mode);
 };
-
-const attachSystemPreferenceListener = (() => {
-  let attached = false;
-  return () => {
-    if (attached) {
-      return;
-    }
-    attached = true;
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    mediaQuery.addEventListener('change', (event) => {
-      const stored = localStorage.getItem(THEME_STORAGE_KEY);
-      if (isDarkStored(stored)) {
-        return;
-      }
-      applyThemeMode(event.matches ? 'dark' : 'light');
-    });
-  };
-})();
 
 const handleThemeToggle = () => {
   const isDark = document.documentElement.classList.contains('dark-mode');
@@ -64,11 +45,6 @@ export const initThemeSwitchers = () => {
 
   const initialMode = detectPreferredMode();
   applyThemeMode(initialMode);
-
-  const hasStoredPreference = isDarkStored(localStorage.getItem(THEME_STORAGE_KEY));
-  if (!hasStoredPreference) {
-    attachSystemPreferenceListener();
-  }
 
   switchers.forEach((switcher) => {
     if (switcher.dataset.themeInit === 'true') {
