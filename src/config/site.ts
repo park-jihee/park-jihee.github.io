@@ -5,7 +5,7 @@ const siteConfig: SiteConfig = {
   // Basic site information
   siteUrl: 'https://park-jihee.github.io',
   title: {
-    ko: 'jihee.log',
+    ko: '2l6l',
   },
   description: {
     ko: 'Odoo ERP · 개발 · AI 이야기',
