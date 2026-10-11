@@ -2,6 +2,7 @@
 title: '블로그를 시작하며'
 description: 'Odoo ERP 개발자의 기술 블로그를 시작합니다'
 date: '2026-10-10'
+image: '/img/posts/hello.svg'
 permalink: 'hello'
 aiGenerated: false
 tags: ['blog', 'odoo']

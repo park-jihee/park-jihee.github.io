@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e8f7ee"/>
+      <stop offset="1" stop-color="#d3efe0"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg)"/>
+
+  <!-- browser window -->
+  <g transform="translate(150 80)">
+    <rect width="300" height="210" rx="18" fill="#ffffff" stroke="#1f2937" stroke-width="5"/>
+    <path d="M0 50 H300" stroke="#1f2937" stroke-width="5"/>
+    <circle cx="28" cy="25" r="8" fill="#f87171"/>
+    <circle cx="54" cy="25" r="8" fill="#fbbf24"/>
+    <circle cx="80" cy="25" r="8" fill="#4cb963"/>
+
+    <!-- text lines -->
+    <rect x="30" y="80" width="150" height="16" rx="8" fill="#4cb963"/>
+    <rect x="30" y="112" width="240" height="12" rx="6" fill="#d1d5db"/>
+    <rect x="30" y="136" width="200" height="12" rx="6" fill="#d1d5db"/>
+    <rect x="30" y="160" width="220" height="12" rx="6" fill="#d1d5db"/>
+  </g>
+
+  <!-- pencil -->
+  <g transform="translate(410 230) rotate(40)">
+    <rect x="0" y="0" width="34" height="120" rx="6" fill="#fbbf24" stroke="#1f2937" stroke-width="5"/>
+    <rect x="0" y="0" width="34" height="22" rx="6" fill="#f87171" stroke="#1f2937" stroke-width="5"/>
+    <path d="M0 120 L17 155 L34 120 Z" fill="#fde68a" stroke="#1f2937" stroke-width="5" stroke-linejoin="round"/>
+  </g>
+
+  <!-- sparkles -->
+  <path d="M115 120 l6 16 16 6 -16 6 -6 16 -6 -16 -16 -6 16 -6z" fill="#4cb963"/>
+  <path d="M480 95 l4 11 11 4 -11 4 -4 11 -4 -11 -11 -4 11 -4z" fill="#fbbf24"/>
+</svg>
