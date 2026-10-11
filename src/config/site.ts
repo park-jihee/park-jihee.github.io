@@ -13,9 +13,6 @@ const siteConfig: SiteConfig = {
 
   // Home page hero
   home: {
-    eyebrow: {
-      ko: '// odoo · dev · ai',
-    },
     headline: {
       ko: ['Odoo를 만들며 겪은 문제와', '해결 과정을 **기록**합니다.'],
     },
@@ -112,7 +109,7 @@ const siteConfig: SiteConfig = {
     sitemap: true,
     imageLightbox: true,
     postNavigation: false,
-    readingTime: true,
+    readingTime: false,
     viewCounter: false,
   },
 

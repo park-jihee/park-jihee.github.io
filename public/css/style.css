@@ -2984,14 +2984,6 @@ body {
     margin-bottom: 3.5rem;
 }
 
-.hero__eyebrow {
-    margin-bottom: 1.25rem;
-
-    font-family: var(--font-mono);
-    font-size: .8125rem;
-    color: var(--accent);
-}
-
 .hero__title {
     margin-bottom: 1.5rem;
 

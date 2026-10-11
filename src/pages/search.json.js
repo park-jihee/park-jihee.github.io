@@ -23,7 +23,7 @@ export async function GET() {
     title: entry.data.h1 ?? entry.data.title ?? 'Untitled',
     description: entry.data.description ?? entry.data.announcement ?? '',
     summary: getPostSummary(entry),
-    readingMinutes: getReadingMinutes(entry),
+    readingMinutes: siteConfig.features.readingTime ? getReadingMinutes(entry) : null,
     tags: entry.data.tags,
     coverUrl: getPostCoverImage(entry),
     url: new URL(getPostPermalink(entry), siteConfig.siteUrl).toString(),

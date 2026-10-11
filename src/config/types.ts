@@ -58,7 +58,6 @@ export interface SiteProfileLink {
 }
 
 export interface SiteHomeConfig {
-  eyebrow: LocaleRecord<string>;
   // Wrap a word in **double asterisks** to highlight it.
   headline: LocaleRecord<string[]>;
   intro: LocaleRecord<string>;
