@@ -14,6 +14,10 @@ type SearchPost = {
   categoryText?: string;
   icon?: string;
   imageUrl?: string;
+  coverUrl?: string | null;
+  summary?: string;
+  readingMinutes?: number;
+  tags?: string[];
   date?: string;
   publishedAt?: string;
 };
@@ -187,22 +191,26 @@ const renderResults = (
   const markup = posts
     .map((post) => {
       const categoryText = post.categoryText ?? post.category ?? '';
-      const categoryHtml =
-        post.category && post.icon
-          ? `<div class="post__category category"><div class="category__item category__item--light-blue"><span class="material-symbols-rounded" aria-hidden="true">${post.icon}</span> ${categoryText}</div></div>`
-          : '';
-      const imageHtml = post.imageUrl
-        ? `<div class="post__thumbnail"><picture><img src="${post.imageUrl}" alt=""></picture></div>`
+      const meta = post.readingMinutes
+        ? `${post.date ?? ''} · 약 ${post.readingMinutes}분`
+        : post.date ?? '';
+      const tags = [
+        categoryText ? `<span class="post__tag post__tag--category">${escapeHtml(categoryText)}</span>` : '',
+        ...(post.tags ?? []).map((tag) => `<span class="post__tag">${escapeHtml(tag)}</span>`),
+      ].join('');
+      const thumbnail = post.coverUrl
+        ? `<div class="post__thumbnail"><img src="${post.coverUrl}" alt="" loading="lazy"></div>`
         : '';
 
       return `
 <a href="${post.url}" class="post">
-  ${categoryHtml}
-  ${imageHtml}
   <div class="post__content">
-    <h2 class="post__title">${post.title}</h2>
-    <div class="post__date">${post.date ?? ''}</div>
+    <div class="post__meta">${escapeHtml(meta)}</div>
+    <h2 class="post__title">${escapeHtml(post.title)}</h2>
+    ${post.summary ? `<p class="post__summary">${escapeHtml(post.summary)}</p>` : ''}
+    <div class="post__tags">${tags}</div>
   </div>
+  ${thumbnail}
 </a>`;
     })
     .join('');

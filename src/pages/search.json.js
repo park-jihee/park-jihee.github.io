@@ -1,6 +1,10 @@
 import siteConfig from '@config/site';
 import {
+  cleanMarkdown,
   getPostCategory,
+  getPostCoverImage,
+  getPostSummary,
+  getReadingMinutes,
   getPostImage,
   getPostLanguage,
   getPostPermalink,
@@ -12,28 +16,16 @@ import { formatDate } from '@lib/format';
 const isDevelopment = import.meta.env.DEV;
 const MAX_CONTENT_LENGTH = 400;
 
-function cleanMarkdown(body) {
-  return body
-    .replace(/!\[[^\]]*]\([^)]*\)/g, '')
-    .replace(/\[[^\]]*]\([^)]*\)/g, '')
-    .replace(/<[^>]+>/g, '')
-    .replace(/^#+\s+(.*)/gm, '$1')
-    .replace(/\*\*(.*?)\*\*/g, '$1')
-    .replace(/\*(.*?)\*/g, '$1')
-    .replace(/__(.*?)__/g, '$1')
-    .replace(/_(.*?)_/g, '$1')
-    .replace(/`{1,3}([^`]*)`{1,3}/g, '$1')
-    .replace(/\n/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
 export async function GET() {
   const posts = await getPosts({ includeDrafts: isDevelopment });
 
   const payload = posts.map((entry) => ({
     title: entry.data.h1 ?? entry.data.title ?? 'Untitled',
     description: entry.data.description ?? entry.data.announcement ?? '',
+    summary: getPostSummary(entry),
+    readingMinutes: getReadingMinutes(entry),
+    tags: entry.data.tags,
+    coverUrl: getPostCoverImage(entry),
     url: new URL(getPostPermalink(entry), siteConfig.siteUrl).toString(),
     date: formatDate(entry.data.date, getPostLanguage(entry)),
     publishedAt: entry.data.date.toISOString(),

@@ -10,7 +10,9 @@ import {
   getCategoryConfig,
   getCategoryPathSegment,
   getPostCategory,
-  getPostImage,
+  getPostCoverImage,
+  getPostSummary,
+  getReadingMinutes,
   getPostPermalink,
   getPageByTranslationKey,
   getPagePermalink,
@@ -71,8 +73,6 @@ const nextPageUrl = page.url.next
   ? ensureTrailingSlash(page.url.next)
   : undefined;
 
-const categoriesSet = new Set(posts.map((post) => getPostCategory(post)));
-const shouldShowCategories = !categoryId && categoriesSet.size > 1;
 
 const categoryMeta = categoryId ? getCategoryConfig(categoryId) : null;
 
@@ -163,7 +163,10 @@ const postsWithMetadata = posts.map((post) => {
     category,
     categoryLabel,
     date: formatDate(post.data.date, lang),
-    image: getPostImage(post),
+    image: getPostCoverImage(post),
+    summary: getPostSummary(post),
+    readingMinutes: getReadingMinutes(post),
+    tags: post.data.tags,
   };
 });
 
@@ -331,30 +334,28 @@ if (defaultAlternate) {
 
         {postsWithMetadata.map((post) => (
           <a href={post.url} class="post">
-            {shouldShowCategories && siteConfig.categories[post.category] && (
-              <div class="post__category category">
-                <div class="category__item category__item--light-blue"><Icon name={siteConfig.categories[post.category].icon} /> {post.categoryLabel}</div>
+            <div class="post__content">
+              <div class="post__meta">
+                {post.date}
+                {siteConfig.features.readingTime && <> · 약 {post.readingMinutes}분</>}
               </div>
-            )}
-
-            <div class="post__date_right category">
-              <div class="category__item date__item--light-blue">{post.date}</div>
+              <h2 class="post__title">{post.title}</h2>
+              {post.summary && <p class="post__summary">{post.summary}</p>}
+              <div class="post__tags">
+                {!categoryId && siteConfig.categories[post.category] && (
+                  <span class="post__tag post__tag--category">{post.categoryLabel}</span>
+                )}
+                {post.tags.map((tag) => (
+                  <span class="post__tag">{tag}</span>
+                ))}
+              </div>
             </div>
 
             {post.image && (
               <div class="post__thumbnail">
-                <picture>
-                  <img src={post.image} alt="" />
-                </picture>
+                <img src={post.image} alt="" loading="lazy" />
               </div>
             )}
-
-            <div class="post__content">
-              <h2 class="post__title">{post.title}</h2>
-              {post.announcement && (
-                <div class="post__summary">{post.announcement}</div>
-              )}
-            </div>
           </a>
         ))}
       </div>

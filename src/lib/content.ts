@@ -215,6 +215,52 @@ export async function getPostTranslations(entry: PostEntry) {
     .sort(DEFAULT_POST_SORT);
 }
 
+// Plain-text version of a markdown body (for summaries, search, reading time).
+export function cleanMarkdown(body: string): string {
+  return body
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/!\[[^\]]*]\([^)]*\)/g, '')
+    .replace(/\[([^\]]*)]\([^)]*\)/g, '$1')
+    .replace(/<[^>]+>/g, '')
+    .replace(/^#+\s+(.*)/gm, '$1')
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/\*(.*?)\*/g, '$1')
+    .replace(/__(.*?)__/g, '$1')
+    .replace(/_(.*?)_/g, '$1')
+    .replace(/`([^`]*)`/g, '$1')
+    .replace(/^\s*[-*+]\s+/gm, '')
+    .replace(/\n/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Summary shown in post lists: description → announcement → start of the body.
+export function getPostSummary(entry: PostEntry, maxLength = 200): string {
+  const explicit = entry.data.description ?? entry.data.announcement;
+  if (explicit) {
+    return explicit;
+  }
+
+  const text = cleanMarkdown(entry.body);
+  return text.length > maxLength ? `${text.slice(0, maxLength).trim()}…` : text;
+}
+
+// Rough reading time in minutes (Korean ≈ 500 characters per minute).
+export function getReadingMinutes(entry: PostEntry): number {
+  const text = cleanMarkdown(entry.body).replace(/\s+/g, '');
+  return Math.max(1, Math.round(text.length / 500));
+}
+
+// Image set by the post itself (frontmatter or first image in the body); no placeholder fallback.
+export function getPostCoverImage(entry: PostEntry): string | null {
+  if (entry.data.image) {
+    return entry.data.image;
+  }
+
+  const imageMatch = /!\[[^\]]*]\(([^)]+)\)/.exec(entry.body);
+  return imageMatch ? imageMatch[1] : null;
+}
+
 export function getPostImage(entry: PostEntry) {
   if (entry.data.image) {
     return entry.data.image;

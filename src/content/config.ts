@@ -10,6 +10,7 @@ const posts = defineCollection({
     announcement: z.string().optional(),
     image: z.string().optional(),
     aiGenerated: z.boolean().default(false),
+    tags: z.array(z.string()).default([]),
     permalink: z.string().optional(),
     draft: z.boolean().default(false),
   }),
