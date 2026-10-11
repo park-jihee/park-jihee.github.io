@@ -51,6 +51,7 @@
     --accent: #7A4B6E; /* Odoo purple */
     --accent-soft: #f3e9f0;
     --sidebar-width: 254px;
+    --sidebar-gap: 4rem; /* space between sidebar and content */
 }
 
 
@@ -2720,7 +2721,7 @@ body {
     display: flex;
     align-items: stretch;
     align-self: stretch;
-    gap: 2.5rem;
+    gap: 3rem;
 }
 
 .header__category {
@@ -2833,7 +2834,16 @@ body {
 @media (min-width: 1024px) {
     .content--sidebar-left {
         grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
-        gap: 4rem;
+        gap: var(--sidebar-gap);
+    }
+
+    /* Header categories start where the content column starts */
+    .header__left {
+        gap: 0;
+    }
+
+    .header__logo {
+        width: calc(var(--sidebar-width) + var(--sidebar-gap));
     }
 
     .content--sidebar-left > .sidebar,
@@ -2842,7 +2852,7 @@ body {
     }
 
     .article-wrap--with-aside {
-        gap: 4rem;
+        gap: var(--sidebar-gap);
     }
 }
 
