@@ -174,13 +174,9 @@ const renderResults = (
     : strings.resultsHeading;
 
   const header = `
-<div class="filter">
-  <div class="filter__categories categories">
-    <div class="categories__wrapper">
-      <h2 class="categories__wrapper">${escapeHtml(headerTitle)}</h2>
-    </div>
-    <div class="categories__content"></div>
-  </div>
+<div class="section-head">
+  <h2 class="section-head__title">${escapeHtml(headerTitle)}</h2>
+  <span class="section-head__count">${String(posts.length).padStart(2, '0')} ${posts.length === 1 ? 'post' : 'posts'}</span>
 </div>`;
 
   if (!posts.length) {
@@ -191,13 +187,17 @@ const renderResults = (
   const markup = posts
     .map((post) => {
       const categoryText = post.categoryText ?? post.category ?? '';
-      const meta = post.readingMinutes
-        ? `${post.date ?? ''} · 약 ${post.readingMinutes}분`
-        : post.date ?? '';
-      const tags = [
-        categoryText ? `<span class="post__tag post__tag--category">${escapeHtml(categoryText)}</span>` : '',
-        ...(post.tags ?? []).map((tag) => `<span class="post__tag">${escapeHtml(tag)}</span>`),
-      ].join('');
+      const date = post.publishedAt ? post.publishedAt.slice(0, 10).replace(/-/g, '.') : post.date ?? '';
+      const meta = [
+        categoryText ? `<span class="post__meta-category">${escapeHtml(categoryText)}</span>` : '',
+        `<span>${escapeHtml(date)}</span>`,
+        post.readingMinutes ? `<span>${post.readingMinutes} min</span>` : '',
+      ]
+        .filter(Boolean)
+        .join('<span>·</span>');
+      const tags = (post.tags ?? [])
+        .map((tag) => `<span class="post__tag">#${escapeHtml(tag)}</span>`)
+        .join('');
       const thumbnail = post.coverUrl
         ? `<div class="post__thumbnail"><img src="${post.coverUrl}" alt="" loading="lazy"></div>`
         : '';
@@ -205,10 +205,10 @@ const renderResults = (
       return `
 <a href="${post.url}" class="post">
   <div class="post__content">
-    <div class="post__meta">${escapeHtml(meta)}</div>
-    <h2 class="post__title">${escapeHtml(post.title)}</h2>
+    <div class="post__meta">${meta}</div>
+    <h3 class="post__title">${escapeHtml(post.title)} <span class="material-symbols-rounded post__arrow" aria-hidden="true">arrow_forward</span></h3>
     ${post.summary ? `<p class="post__summary">${escapeHtml(post.summary)}</p>` : ''}
-    <div class="post__tags">${tags}</div>
+    ${tags ? `<div class="post__tags">${tags}</div>` : ''}
   </div>
   ${thumbnail}
 </a>`;
@@ -300,6 +300,17 @@ export const initSearch = () => {
 
     if (searchToggle.dataset.searchToggleInit !== 'true') {
       searchToggle.dataset.searchToggleInit = 'true';
+      document.addEventListener('keydown', (event) => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+          event.preventDefault();
+          if (searchContainer.classList.contains('hidden')) {
+            searchToggle.click();
+          } else {
+            searchInput.focus();
+          }
+        }
+      });
+
       searchToggle.addEventListener('click', () => {
         const isHidden = searchContainer.classList.toggle('hidden');
         if (isHidden) {

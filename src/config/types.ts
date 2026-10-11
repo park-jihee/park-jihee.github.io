@@ -59,10 +59,18 @@ export interface SiteContactLink {
   iconSvg?: string;
 }
 
+export interface SiteHomeConfig {
+  eyebrow: LocaleRecord<string>;
+  // Wrap a word in **double asterisks** to highlight it.
+  headline: LocaleRecord<string[]>;
+  intro: LocaleRecord<string>;
+}
+
 export interface SiteConfig {
   siteUrl: string;
   title: LocaleRecord<string>;
   description: LocaleRecord<string>;
+  home: SiteHomeConfig;
   author: SiteAuthorConfig;
   postsPerPage: number;
   featuredImageFallback: string;

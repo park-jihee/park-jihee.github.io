@@ -31,7 +31,9 @@ const { lang, navItems, languageOptions }: MobileMenuProps = Astro.props;
     <nav class="mobile-menu__nav">
       <CategoriesList variant="mobile" />
       <NavLinks navItems={navItems} variant="mobile" />
-      <LanguageSwitcher lang={lang} options={languageOptions} variant="mobile" />
+      {languageOptions.length > 1 && (
+        <LanguageSwitcher lang={lang} options={languageOptions} variant="mobile" />
+      )}
     </nav>
   </div>
 </div>

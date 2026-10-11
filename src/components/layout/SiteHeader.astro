@@ -42,23 +42,29 @@ const {
 <header class="header">
   <div class="cont flex">
     <div class="header__left">
-      <div class="header__text-logo"><a href={homeHref} class="header__text-logo">{siteTitle}</a></div>
-      <CategoriesList variant="header" />
+      <a href={homeHref} class="header__logo">
+        <span class="header__logo-mark" aria-hidden="true"></span>{siteTitle}
+      </a>
+      <nav class="header__menu" aria-label="Main">
+        <CategoriesList variant="header" />
+        <NavLinks navItems={navItems} />
+      </nav>
     </div>
     <div class="header__nav">
       {showSearch && (
         <button type="button" class="header__search-toggle" aria-label="Toggle search">
           <Icon name="search" class="header__search-icon" />
+          <span class="header__search-label">검색</span>
+          <kbd class="header__search-kbd">⌘K</kbd>
         </button>
       )}
       {enableDarkMode && (
-        <button type="button" class="header__theme-mode-switcher theme-mode-switcher" data-mode="light">
+        <button type="button" class="header__theme-mode-switcher theme-mode-switcher" data-mode="light" aria-label="Toggle theme">
           <Icon name="dark_mode" class="theme-mode-switcher__icon icon-dark" />
           <Icon name="light_mode" class="theme-mode-switcher__icon icon-light" />
         </button>
       )}
-      <NavLinks navItems={navItems} />
-      <LanguageSwitcher lang={lang} options={languageOptions} />
+      {languageOptions.length > 1 && <LanguageSwitcher lang={lang} options={languageOptions} />}
       <button type="button" class="header__menu-toggle" aria-label="Toggle menu">
         <Icon name="menu" class="header__menu-icon" />
       </button>

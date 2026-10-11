@@ -44,17 +44,15 @@ const links = getEnabledCategoryIds()
 const currentPath = ensureTrailingSlash(Astro.url.pathname);
 ---
 {variant === 'header' ? (
-  <nav class="header__categories" aria-label="Categories">
-    {links.map((link) => (
-      <a
-        href={link.href}
-        class="header__category"
-        data-active={currentPath.startsWith(link.href) ? 'true' : 'false'}
-      >
-        {link.label}
-      </a>
-    ))}
-  </nav>
+  links.map((link) => (
+    <a
+      href={link.href}
+      class="header__category"
+      data-active={currentPath.startsWith(link.href) ? 'true' : 'false'}
+    >
+      {link.label}
+    </a>
+  ))
 ) : variant === 'mobile' ? (
   links.map((link) => (
     <a href={link.href} class="mobile-menu__link">

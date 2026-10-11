@@ -17,11 +17,9 @@ export async function getStaticPaths({ paginate }) {
   const paths = await Promise.all(
     categories.map(async (category) => {
       const [group] = await groupPostsByLocales([DEFAULT_LOCALE], { category });
-      if (!group) {
-        return [];
-      }
 
-      return paginate(group.posts, {
+      // Categories without posts still get a page (linked from the home page cards)
+      return paginate(group?.posts ?? [], {
         pageSize: siteConfig.postsPerPage,
         params: { category: getCategoryPathSegment(category) },
       });

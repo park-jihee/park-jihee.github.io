@@ -37,6 +37,7 @@ const fallbackTexts: UiDictionary = {
   'ui.ai_warning': 'The content of this material is written or translated using AI',
   'ui.contents': 'Contents',
   'ui.all_posts': 'All Posts',
+  'ui.recent_posts': 'Recent Posts',
 };
 
 const getLocalizedValue = <T>(
@@ -101,6 +102,7 @@ const localeOverrides: Partial<Record<LocaleCode, Partial<UiDictionary>>> = {
     'ui.ai_warning': '이 글은 AI의 도움을 받아 작성되었습니다',
     'ui.contents': '목차',
     'ui.all_posts': '전체 글',
+    'ui.recent_posts': '최근 글',
   },
 };
 

@@ -15,7 +15,7 @@ const lang = DEFAULT_LOCALE;
 ---
 <PostsList
   title={`${siteConfig.title[lang]} — ${siteConfig.description[lang]}`}
-  description={siteConfig.author.bio[lang]}
+  description={siteConfig.author.bio[lang].replace(/\n/g, ' ')}
   posts={posts}
   page={page}
 />

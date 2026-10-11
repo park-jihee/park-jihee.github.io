@@ -1,14 +1,14 @@
 ---
 import Icon from '@components/Icon.astro';
 import Layout from './Layout.astro';
-import ProfileCard from '@components/layout/ProfileCard.astro';
-import ContactLinks from '@components/layout/ContactLinks.astro';
-import FooterCopy from '@components/layout/FooterCopy.astro';
 import siteConfig from '@config/site';
 import {
   type PostEntry,
   getCategoryConfig,
+  getCategoryPath,
   getCategoryPathSegment,
+  getEnabledCategoryIds,
+  getPosts,
   getPostCategory,
   getPostCoverImage,
   getPostSummary,
@@ -46,6 +46,9 @@ const {
       prev?: string;
       next?: string;
     };
+    currentPage: number;
+    lastPage: number;
+    total: number;
   };
 } = Astro.props;
 
@@ -122,31 +125,37 @@ const contactLinks = (() => {
   return links;
 })();
 
-const projectLinks = (siteConfig.projects ?? [])
-  .map((project) => {
-    if (!project?.url) {
-      return null;
-    }
+const formatDotDate = (date: Date) =>
+  [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0'),
+  ].join('.');
 
-    const label =
-      project.label?.[lang] ??
-      project.label?.[DEFAULT_LOCALE] ??
-      project.label?.[siteConfig.defaultLanguage] ??
-      project.id;
+const isHome = !categoryId && page.currentPage === 1;
 
-    if (!label) {
-      return null;
-    }
+// Category cards on the home page (all enabled categories, numbered)
+const postsForLang = isHome ? await getPosts({ lang }) : [];
+const categoryCards = getEnabledCategoryIds().map((key, index) => {
+  const config = getCategoryConfig(key);
+  return {
+    key,
+    number: String(index + 1).padStart(2, '0'),
+    href: translatePath(getCategoryPath(key)),
+    label: config?.label?.[lang] ?? config?.label?.[DEFAULT_LOCALE] ?? key,
+    description: config?.description?.[lang] ?? config?.description?.[DEFAULT_LOCALE] ?? '',
+    count: postsForLang.filter((post) => getPostCategory(post) === key).length,
+  };
+});
 
-    return {
-      id: project.id,
-      url: project.url,
-      label,
-      icon: project.icon,
-      iconSvg: project.iconSvg,
-    };
-  })
-  .filter((project): project is NonNullable<typeof project> => Boolean(project));
+// Headline lines; **word** is highlighted
+const headlineLines = (siteConfig.home.headline[lang] ?? siteConfig.home.headline[DEFAULT_LOCALE]).map(
+  (line) => line.split('**').map((text, index) => ({ text, highlight: index % 2 === 1 })),
+);
+
+const postCountLabel = `${String(page.total).padStart(2, '0')} ${page.total === 1 ? 'post' : 'posts'}`;
+const bio = siteConfig.author.bio[lang] ?? siteConfig.author.bio[DEFAULT_LOCALE];
+const currentYear = new Date().getFullYear();
 
 const postsWithMetadata = posts.map((post) => {
   const category = getPostCategory(post);
@@ -162,7 +171,7 @@ const postsWithMetadata = posts.map((post) => {
     announcement: post.data.announcement,
     category,
     categoryLabel,
-    date: formatDate(post.data.date, lang),
+    date: formatDotDate(post.data.date),
     image: getPostCoverImage(post),
     summary: getPostSummary(post),
     readingMinutes: getReadingMinutes(post),
@@ -174,8 +183,9 @@ const currentCategoryLabel = categoryMeta
   ? categoryMeta.label?.[lang] ??
     categoryMeta.label?.[DEFAULT_LOCALE] ??
     categoryId
+  : isHome
+  ? t('ui.recent_posts')
   : t('ui.all_posts');
-const categoryIcon = categoryMeta?.icon ?? 'folder';
 const categoryDescription = categoryMeta?.description?.[lang] ?? null;
 
 const currentPageNumber = page.currentPage ?? 1;
@@ -258,52 +268,27 @@ if (defaultAlternate) {
   alternates={alternates}
 >
   <div class="content content--sidebar-left">
-    <div class="sidebar sidebar--left">
-      <ProfileCard
-        className="sidebar__profile"
-        title={t('ui.profile')}
-        description={t('ui.description')}
-        profileHref={aboutHref}
-        avatarSrc={siteConfig.author.avatar}
-        alt={t('name')}
-      />
+    <aside class="sidebar sidebar--left">
+      <a href={aboutHref} class="profile-card__avatar" aria-label={t('ui.about')}>
+        <img src={siteConfig.author.avatar} alt={t('name')} />
+      </a>
+      <div class="profile-card__name">{t('name')}</div>
+      <p class="profile-card__bio">{bio}</p>
 
-      {projectLinks.length > 0 && (
-        <div class="service sidebar__service">
-          <div class="title service__title">
-            <Icon name="star" class="icon" /> {t('ui.projects')}
-          </div>
-          <div class="box-links service__box-links">
-            {projectLinks.map((project) => (
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="box-links__link"
-                data-project-id={project.id}
-              >
-                {project.iconSvg ? (
-                  <span class="icon" aria-hidden="true" set:html={project.iconSvg}></span>
-                ) : project.icon ? (
-                  <Icon name={project.icon} class="icon" />
-                ) : null}
-                <span class="box-links__link-name">{project.label}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
+      <div class="sidebar-links">
+        {contactLinks.map((link) => (
+          <a href={link.url} class="sidebar-links__item" target="_blank" rel="noopener noreferrer">
+            <span>{link.name}</span>
+            <Icon name="north_east" />
+          </a>
+        ))}
+      </div>
 
-      <ContactLinks className="sidebar__contact" title={t('ui.contacts')} links={contactLinks} />
-
-      <FooterCopy className="sidebar__footer" />
-    </div>
+      <div class="sidebar__copy">© {currentYear} {t('name')}</div>
+    </aside>
 
     <div class="content-center">
-     <form class="search form hidden" onsubmit="event.preventDefault();">
-        <div class="search__top">
-          <Icon name="search" class="search__top-icon" /> {t('ui.search')}
-        </div>
+      <form class="search form hidden" onsubmit="event.preventDefault();">
         <input
           type="text"
           class="input"
@@ -313,18 +298,42 @@ if (defaultAlternate) {
       <div id="search-results" style="display: none;"></div>
 
       <div class="filter">
-        <div class="filter__categories categories">
-          <div class="categories__wrapper">
-            <Icon name={categoryIcon} />
-            <h1 class="categories__wrapper">{currentCategoryLabel}</h1>
-          </div>
+        {isHome && (
+          <section class="hero">
+            <div class="hero__eyebrow">{siteConfig.home.eyebrow[lang]}</div>
+            <h1 class="hero__title">
+              {headlineLines.map((parts) => (
+                <span class="hero__line">
+                  {parts.map((part) => (part.highlight ? <mark>{part.text}</mark> : part.text))}
+                </span>
+              ))}
+            </h1>
+            <p class="hero__intro">{siteConfig.home.intro[lang]}</p>
 
-          {categoryDescription && (
-            <p class="categories__description">{categoryDescription}</p>
+            <div class="category-cards">
+              {categoryCards.map((card) => (
+                <a href={card.href} class="category-card">
+                  <span class="category-card__number">{card.number}</span>
+                  <span class="category-card__label">{card.label}</span>
+                  <span class="category-card__description">{card.description}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <div class="section-head">
+          {isHome ? (
+            <h2 class="section-head__title">{currentCategoryLabel}</h2>
+          ) : (
+            <h1 class="section-head__title">{currentCategoryLabel}</h1>
           )}
-
-          <div class="categories__content"></div>
+          <span class="section-head__count">{postCountLabel}</span>
         </div>
+
+        {categoryDescription && (
+          <p class="section-head__description">{categoryDescription}</p>
+        )}
       </div>
 
       <div class="posts-list">
@@ -336,19 +345,27 @@ if (defaultAlternate) {
           <a href={post.url} class="post">
             <div class="post__content">
               <div class="post__meta">
-                {post.date}
-                {siteConfig.features.readingTime && <> · 약 {post.readingMinutes}분</>}
-              </div>
-              <h2 class="post__title">{post.title}</h2>
-              {post.summary && <p class="post__summary">{post.summary}</p>}
-              <div class="post__tags">
-                {!categoryId && siteConfig.categories[post.category] && (
-                  <span class="post__tag post__tag--category">{post.categoryLabel}</span>
+                <span class="post__meta-category">{post.categoryLabel}</span>
+                <span>·</span>
+                <span>{post.date}</span>
+                {siteConfig.features.readingTime && (
+                  <>
+                    <span>·</span>
+                    <span>{post.readingMinutes} min</span>
+                  </>
                 )}
-                {post.tags.map((tag) => (
-                  <span class="post__tag">{tag}</span>
-                ))}
               </div>
+              <h3 class="post__title">
+                {post.title} <Icon name="arrow_forward" class="post__arrow" />
+              </h3>
+              {post.summary && <p class="post__summary">{post.summary}</p>}
+              {post.tags.length > 0 && (
+                <div class="post__tags">
+                  {post.tags.map((tag) => (
+                    <span class="post__tag">#{tag}</span>
+                  ))}
+                </div>
+              )}
             </div>
 
             {post.image && (
@@ -360,23 +377,23 @@ if (defaultAlternate) {
         ))}
       </div>
 
-      <div class="pagination">
-        {page.url.prev ? (
-          <a class="pagination__link" href={page.url.prev}><Icon name="arrow_back" /> {t('ui.prev')}</a>
-        ) : (
-          <span class="pagination__link disabled" style="visibility: hidden;">{t('ui.prev')}</span>
-        )}
+      {page.lastPage > 1 && (
+        <div class="pagination">
+          {page.url.prev ? (
+            <a class="pagination__link" href={page.url.prev}><Icon name="arrow_back" /> {t('ui.prev')}</a>
+          ) : (
+            <span class="pagination__link disabled" style="visibility: hidden;">{t('ui.prev')}</span>
+          )}
 
-        <span class="pagination__text">{page.currentPage} / {page.lastPage}</span>
+          <span class="pagination__text">{page.currentPage} / {page.lastPage}</span>
 
-        {page.url.next ? (
-          <a class="pagination__link" href={page.url.next}>{t('ui.next')} <Icon name="arrow_forward" /></a>
-        ) : (
-          <span class="pagination__link disabled" style="visibility: hidden;">{t('ui.next')}</span>
-        )}
-      </div>
-
+          {page.url.next ? (
+            <a class="pagination__link" href={page.url.next}>{t('ui.next')} <Icon name="arrow_forward" /></a>
+          ) : (
+            <span class="pagination__link disabled" style="visibility: hidden;">{t('ui.next')}</span>
+          )}
+        </div>
+      )}
     </div>
-
   </div>
 </Layout>

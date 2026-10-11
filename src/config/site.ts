@@ -5,10 +5,23 @@ const siteConfig: SiteConfig = {
   // Basic site information
   siteUrl: 'https://park-jihee.github.io',
   title: {
-    ko: '박지희 기술 블로그',
+    ko: 'jihee.log',
   },
   description: {
     ko: 'Odoo ERP · 개발 · AI 이야기',
+  },
+
+  // Home page hero
+  home: {
+    eyebrow: {
+      ko: '// odoo · dev · ai',
+    },
+    headline: {
+      ko: ['Odoo를 만들며 겪은 문제와', '해결 과정을 **기록**합니다.'],
+    },
+    intro: {
+      ko: 'ERP 개발 현장의 삽질, 그리고 AI를 업무에 녹여낸 경험을 정리하는 기술 블로그.',
+    },
   },
 
   // Author information
@@ -19,7 +32,7 @@ const siteConfig: SiteConfig = {
     email: 'parkjihee@ecodoobiz.com',
     avatar: '/img/avatar.svg',
     bio: {
-      ko: '에코두비즈 개발팀 · Odoo ERP 개발',
+      ko: 'Odoo ERP 개발자.\n개발과 AI 이야기를 씁니다.',
     },
   },
 
