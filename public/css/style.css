@@ -2866,8 +2866,9 @@ body {
 .profile-card__avatar img {
     width: 100%;
     height: 100%;
-    padding: .5rem;
+    padding: .375rem .375rem 0;
     object-fit: contain;
+    object-position: center bottom;
 }
 
 .profile-card__name {
