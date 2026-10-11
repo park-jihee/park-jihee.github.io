@@ -1,7 +1,6 @@
 ---
 import Icon from '@components/Icon.astro';
 import LanguageSwitcher from '@components/LanguageSwitcher.astro';
-import NavLinks from '@components/layout/NavLinks.astro';
 import CategoriesList from '@components/CategoriesList.astro';
 
 type NavItem = {
@@ -47,7 +46,6 @@ const {
       </a>
       <nav class="header__menu" aria-label="Main">
         <CategoriesList variant="header" />
-        <NavLinks navItems={navItems} />
       </nav>
     </div>
     <div class="header__nav">

@@ -8,7 +8,7 @@ import {
 } from '@lib/content';
 import { DEFAULT_LOCALE } from '@lib/language';
 import { ensureTrailingSlash } from '@utils/url';
-import { getLangFromUrl, useTranslatedPath } from '@i18n/utils';
+import { getLangFromUrl, useTranslatedPath, useTranslations } from '@i18n/utils';
 
 interface CategoriesListProps {
   variant?: 'list' | 'header' | 'mobile';
@@ -17,6 +17,7 @@ interface CategoriesListProps {
 const { variant = 'list' }: CategoriesListProps = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const translatePath = useTranslatedPath(lang);
+const t = useTranslations(lang);
 
 const posts = await getPosts({ lang });
 const counts = posts.reduce<Record<string, number>>((acc, post) => {
@@ -39,29 +40,42 @@ const links = getEnabledCategoryIds()
       count: counts[key] ?? 0,
     };
   })
-  .filter((link): link is NonNullable<typeof link> => Boolean(link && link.count > 0));
+  .filter((link): link is NonNullable<typeof link> => Boolean(link));
 
 const currentPath = ensureTrailingSlash(Astro.url.pathname);
+const homeHref = translatePath('/');
+
+// Header/mobile menus list every category (plus "전체"); the sidebar list only shows ones with posts.
+const listLinks = links.filter((link) => link.count > 0);
+const isAllActive = currentPath === homeHref || /^\/\d+\/$/.test(currentPath);
 ---
 {variant === 'header' ? (
-  links.map((link) => (
-    <a
-      href={link.href}
-      class="header__category"
-      data-active={currentPath.startsWith(link.href) ? 'true' : 'false'}
-    >
-      {link.label}
+  <>
+    <a href={homeHref} class="header__category" data-active={isAllActive ? 'true' : 'false'}>
+      {t('ui.all')}
     </a>
-  ))
+    {links.map((link) => (
+      <a
+        href={link.href}
+        class="header__category"
+        data-active={currentPath.startsWith(link.href) ? 'true' : 'false'}
+      >
+        {link.label}
+      </a>
+    ))}
+  </>
 ) : variant === 'mobile' ? (
-  links.map((link) => (
-    <a href={link.href} class="mobile-menu__link">
-      {link.label}
-    </a>
-  ))
+  <>
+    <a href={homeHref} class="mobile-menu__link">{t('ui.all')}</a>
+    {links.map((link) => (
+      <a href={link.href} class="mobile-menu__link">
+        {link.label}
+      </a>
+    ))}
+  </>
 ) : (
   <div class="tags__list">
-    {links.map((link) => (
+    {listLinks.map((link) => (
       <a href={link.href} data-active={link.href === currentPath ? 'true' : 'false'}>{link.label} ({link.count})</a>
     ))}
   </div>

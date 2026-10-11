@@ -5,10 +5,7 @@ import siteConfig from '@config/site';
 import {
   type PostEntry,
   getCategoryConfig,
-  getCategoryPath,
   getCategoryPathSegment,
-  getEnabledCategoryIds,
-  getPosts,
   getPostCategory,
   getPostCoverImage,
   getPostSummary,
@@ -79,51 +76,6 @@ const nextPageUrl = page.url.next
 
 const categoryMeta = categoryId ? getCategoryConfig(categoryId) : null;
 
-const contactLinks = (() => {
-  const links: Array<{ id?: string; name: string; url: string; icon?: string; iconSvg?: string }> = [];
-
-  const resolveRecordValue = (record: Record<string, string> | undefined): string | null => {
-    if (!record) {
-      return null;
-    }
-
-    return (
-      record[lang] ??
-      record[DEFAULT_LOCALE] ??
-      record[siteConfig.defaultLanguage] ??
-      Object.values(record).find((value) => Boolean(value)) ??
-      null
-    );
-  };
-
-  const resolveUrl = (value: string | Record<string, string>): string | null => {
-    if (typeof value === 'string') {
-      return value;
-    }
-    return resolveRecordValue(value);
-  };
-
-  (siteConfig.contactLinks ?? []).forEach((entry) => {
-    const label =
-      resolveRecordValue(entry.label) ??
-      entry.id;
-    const url = resolveUrl(entry.url);
-
-    if (!label || !url) {
-      return;
-    }
-
-    links.push({
-      id: entry.id,
-      name: label,
-      url,
-      icon: entry.icon,
-      iconSvg: entry.iconSvg,
-    });
-  });
-
-  return links;
-})();
 
 const formatDotDate = (date: Date) =>
   [
@@ -133,20 +85,6 @@ const formatDotDate = (date: Date) =>
   ].join('.');
 
 const isHome = !categoryId && page.currentPage === 1;
-
-// Category cards on the home page (all enabled categories, numbered)
-const postsForLang = isHome ? await getPosts({ lang }) : [];
-const categoryCards = getEnabledCategoryIds().map((key, index) => {
-  const config = getCategoryConfig(key);
-  return {
-    key,
-    number: String(index + 1).padStart(2, '0'),
-    href: translatePath(getCategoryPath(key)),
-    label: config?.label?.[lang] ?? config?.label?.[DEFAULT_LOCALE] ?? key,
-    description: config?.description?.[lang] ?? config?.description?.[DEFAULT_LOCALE] ?? '',
-    count: postsForLang.filter((post) => getPostCategory(post) === key).length,
-  };
-});
 
 // Headline lines; **word** is highlighted
 const headlineLines = (siteConfig.home.headline[lang] ?? siteConfig.home.headline[DEFAULT_LOCALE]).map(
@@ -275,14 +213,28 @@ if (defaultAlternate) {
       <div class="profile-card__name">{t('name')}</div>
       <p class="profile-card__bio">{bio}</p>
 
-      <div class="sidebar-links">
-        {contactLinks.map((link) => (
-          <a href={link.url} class="sidebar-links__item" target="_blank" rel="noopener noreferrer">
-            <span>{link.name}</span>
-            <Icon name="north_east" />
-          </a>
+      <dl class="profile-info">
+        {siteConfig.profileLinks.map((item) => (
+          <div class="profile-info__row">
+            <dt class="profile-info__label">{item.label}</dt>
+            <dd class="profile-info__value">
+              {item.url ? (
+                <a href={item.url} target="_blank" rel="noopener noreferrer">
+                  <span>{item.value}</span>
+                  <Icon name="north_east" />
+                </a>
+              ) : (
+                item.value
+              )}
+            </dd>
+          </div>
         ))}
-      </div>
+      </dl>
+
+      <a href={aboutHref} class="profile-about-btn">
+        <span>{t('ui.about_page')}</span>
+        <Icon name="arrow_forward" />
+      </a>
 
       <div class="sidebar__copy">© {currentYear} {t('name')}</div>
     </aside>
@@ -310,15 +262,6 @@ if (defaultAlternate) {
             </h1>
             <p class="hero__intro">{siteConfig.home.intro[lang]}</p>
 
-            <div class="category-cards">
-              {categoryCards.map((card) => (
-                <a href={card.href} class="category-card">
-                  <span class="category-card__number">{card.number}</span>
-                  <span class="category-card__label">{card.label}</span>
-                  <span class="category-card__description">{card.description}</span>
-                </a>
-              ))}
-            </div>
           </section>
         )}
 

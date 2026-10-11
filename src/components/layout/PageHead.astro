@@ -106,9 +106,9 @@ const modifiedTime = modifiedAt ?? publishedTime;
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="format-detection" content="telephone=no" />
-  <meta name="theme-color" content="#faf9f7" />
+  <meta name="theme-color" content="#ffffff" />
 
-  <script is:inline src={`/js/theme.js?v=${ASSET_VERSION}`}></script>
+  {siteConfig.features.darkMode && <script is:inline src={`/js/theme.js?v=${ASSET_VERSION}`}></script>}
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

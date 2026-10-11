@@ -38,6 +38,8 @@ const fallbackTexts: UiDictionary = {
   'ui.contents': 'Contents',
   'ui.all_posts': 'All Posts',
   'ui.recent_posts': 'Recent Posts',
+  'ui.all': 'All',
+  'ui.about_page': 'About',
 };
 
 const getLocalizedValue = <T>(
@@ -103,6 +105,8 @@ const localeOverrides: Partial<Record<LocaleCode, Partial<UiDictionary>>> = {
     'ui.contents': '목차',
     'ui.all_posts': '전체 글',
     'ui.recent_posts': '최근 글',
+    'ui.all': '전체',
+    'ui.about_page': '소개 페이지',
   },
 };
 

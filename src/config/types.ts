@@ -51,12 +51,10 @@ export interface SiteProjectLink {
   iconSvg?: string;
 }
 
-export interface SiteContactLink {
-  id: string;
-  label: LocaleRecord<string>;
-  url: string | LocaleRecord<string>;
-  icon?: string;
-  iconSvg?: string;
+export interface SiteProfileLink {
+  label: string;
+  value: string;
+  url?: string;
 }
 
 export interface SiteHomeConfig {
@@ -74,7 +72,7 @@ export interface SiteConfig {
   author: SiteAuthorConfig;
   postsPerPage: number;
   featuredImageFallback: string;
-  contactLinks: SiteContactLink[];
+  profileLinks: SiteProfileLink[];
   projects: SiteProjectLink[];
   categories: Record<string, SiteCategoryConfig>;
   navigation: SiteNavigationItemConfig[];
