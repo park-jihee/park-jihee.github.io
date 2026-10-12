@@ -3823,6 +3823,13 @@ body {
 /* Post body: separate top-level sections with extra space */
 .article__text-block h2 {
     margin-top: 3.5rem;
+
+    font-weight: 700;
+}
+
+/* Post body: key sentences (bold) in accent color */
+.article__text-block strong {
+    color: var(--accent);
 }
 
 .article__text-block > h2:first-child {
