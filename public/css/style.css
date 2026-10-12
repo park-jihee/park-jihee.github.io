@@ -2843,6 +2843,25 @@ body {
     top: 3.75rem;
 }
 
+/* Closed mobile menu must not leave its border/shadow under the header */
+.mobile-menu:not(.active) {
+    visibility: hidden;
+    border-bottom-color: transparent;
+    box-shadow: none;
+}
+
+@media (min-width: 769px) {
+    .mobile-menu {
+        display: none;
+    }
+}
+
+/* Stop the scroll "bounce" at the top/bottom from dragging the sticky header */
+html,
+body {
+    overscroll-behavior-y: none;
+}
+
 /* Headings inside the redesigned blocks manage their own spacing */
 .hero__title,
 .section-head__title,
