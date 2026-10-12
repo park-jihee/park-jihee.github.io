@@ -1,15 +1,7 @@
 ---
 import Layout from './Layout.astro';
 import FloatingTOC from '@components/FloatingTOC.astro';
-import siteConfig from '@config/site';
-import {
-  type PageEntry,
-  getPageLanguage,
-  getPageByTranslationKey,
-  getPagePermalink,
-} from '@lib/content';
-import { DEFAULT_LOCALE } from '@lib/language';
-import { useTranslations, useTranslatedPath } from '@i18n/utils';
+import { type PageEntry, getPageLanguage } from '@lib/content';
 
 const {
   entry,
@@ -24,21 +16,6 @@ const {
 } = Astro.props;
 
 const lang = getPageLanguage(entry);
-const t = useTranslations(lang);
-const translatePath = useTranslatedPath(lang);
-const aboutHref = await (async () => {
-  const localized = await getPageByTranslationKey('about', lang);
-  if (localized) {
-    return getPagePermalink(localized);
-  }
-
-  const fallback = await getPageByTranslationKey('about', DEFAULT_LOCALE);
-  if (fallback) {
-    return getPagePermalink(fallback);
-  }
-
-  return translatePath('/about');
-})();
 ---
 <Layout
   title={entry.data.title}
@@ -54,24 +31,6 @@ const aboutHref = await (async () => {
       <article>
         <div class="article__head">
           <h1 class="h1">{entry.data.h1 ?? entry.data.title}</h1>
-          <div class="article__nav">
-            <div class="article__nav-top">
-              <div class="article__author author">
-                <div class="author__photo">
-                  <a href={translatePath('/')}>
-                    <picture>
-                      <img src={siteConfig.author.avatar} alt={t('name')} />
-                    </picture>
-                  </a>
-                </div>
-                <div class="author__name">
-                  <a href={aboutHref} class="author__name">
-                    {t('name')}
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div class="text-block article__text-block">
