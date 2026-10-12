@@ -14,10 +14,10 @@ const siteConfig: SiteConfig = {
   // Home page hero
   home: {
     headline: {
-      ko: ['Odoo를 만들며 겪은 문제와', '해결 과정을 **기록**합니다.'],
+      ko: ['Odoo를 개발하며 배우고 **기록**합니다.'],
     },
     intro: {
-      ko: 'ERP 개발 현장의 삽질, 그리고 AI를 업무에 녹여낸 경험을 정리하는 기술 블로그.',
+      ko: 'Odoo ERP 개발을 중심으로 AI 활용과 프로젝트 경험까지\n실무에서 겪은 시행착오와 배움을 기록하는 기술 블로그.',
     },
   },
 
