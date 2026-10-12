@@ -3798,9 +3798,16 @@ body {
     word-break: keep-all;
 }
 
-/* Post body: larger reading text (18px); headings scale with it */
+/* Post body: larger reading text (17px, 16px on mobile); headings scale with it */
 .article:not(.article--page) .article__text-block {
-    font-size: 1.125rem;
+    font-size: 1.0625rem;
+    word-break: keep-all;
+}
+
+@media (max-width: 767px) {
+    .article:not(.article--page) .article__text-block {
+        font-size: 1rem;
+    }
 }
 
 .article:not(.article--page) .article__text-block h2 {
