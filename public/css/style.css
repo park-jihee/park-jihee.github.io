@@ -3800,7 +3800,7 @@ body {
 .text-block .photo-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 8px;
     margin-bottom: 20px;
 }
 
