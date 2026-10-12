@@ -139,8 +139,20 @@ function filterDraftedEntries<T>(
   });
 }
 
+// Today's date (YYYY-MM-DD) in Korea time, so posts go live on their date in KST.
+const todayInKorea = () =>
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
+
+// Posts dated in the future stay hidden until that date (the site is rebuilt daily).
+const isScheduledPost = (entry: PostEntry) =>
+  entry.data.date.toISOString().slice(0, 10) > todayInKorea();
+
 const filterDraftedPostEntries = (entries: PostEntry[], includeDrafts = false) =>
-  filterDraftedEntries(entries, getPostTranslationKey, includeDrafts);
+  filterDraftedEntries(
+    includeDrafts ? entries : entries.filter((entry) => !isScheduledPost(entry)),
+    getPostTranslationKey,
+    includeDrafts,
+  );
 
 const filterDraftedPageEntries = (entries: PageEntry[], includeDrafts = false) =>
   filterDraftedEntries(entries, getPageTranslationKey, includeDrafts);
