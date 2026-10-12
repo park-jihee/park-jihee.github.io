@@ -1,45 +1,59 @@
 ---
-// Year-grouped timeline (used on the About page).
-export interface TimelineEntry {
-  month?: string;
+// Education & career timeline (About page).
+// items: "Client: what was done" — the part before the first ':' is shown in bold.
+export interface TimelineItem {
+  year: string;
+  period?: string;
   title: string;
+  badge?: string;
+  current?: boolean;
   description?: string;
   items?: string[];
 }
 
-export interface TimelineYear {
-  year: string;
-  entries: TimelineEntry[];
-}
-
 interface TimelineProps {
-  years: TimelineYear[];
+  items: TimelineItem[];
 }
 
-const { years }: TimelineProps = Astro.props;
+const { items }: TimelineProps = Astro.props;
+
+const splitItem = (item: string) => {
+  const index = item.indexOf(':');
+  return index === -1
+    ? { name: null, text: item }
+    : { name: item.slice(0, index).trim(), text: item.slice(index + 1).trim() };
+};
 ---
 <div class="timeline">
-  {years.map(({ year, entries }) => (
-    <section class="timeline__year">
-      <div class="timeline__year-label">{year}</div>
+  {items.map((entry) => (
+    <section class:list={['timeline__row', { 'timeline__row--current': entry.current }]}>
+      <div class="timeline__when">
+        <div class="timeline__year">{entry.year}</div>
+        {entry.period && <div class="timeline__period">{entry.period}</div>}
+      </div>
+
       <div class="timeline__rail" aria-hidden="true"><span class="timeline__dot"></span></div>
-      <div class="timeline__entries">
-        {entries.map((entry) => (
-          <div class="timeline__entry">
-            <div class="timeline__month">{entry.month ?? '-'}</div>
-            <div class="timeline__body">
-              <div class="timeline__title">{entry.title}</div>
-              {entry.description && <div class="timeline__description">{entry.description}</div>}
-              {entry.items && entry.items.length > 0 && (
-                <div class="timeline__items">
-                  {entry.items.map((item) => (
-                    <div class="timeline__item">{item}</div>
-                  ))}
+
+      <div class="timeline__body">
+        <div class="timeline__title">
+          {entry.title}
+          {entry.badge && <span class="timeline__badge">{entry.badge}</span>}
+        </div>
+        {entry.description && <div class="timeline__description">{entry.description}</div>}
+        {entry.items && entry.items.length > 0 && (
+          <div class="timeline__items">
+            {entry.items.map((item) => {
+              const { name, text } = splitItem(item);
+              return (
+                <div class="timeline__item">
+                  {name && <strong>{name}</strong>}
+                  {name && <span class="timeline__sep"> · </span>}
+                  {text}
                 </div>
-              )}
-            </div>
+              );
+            })}
           </div>
-        ))}
+        )}
       </div>
     </section>
   ))}
@@ -47,22 +61,30 @@ const { years }: TimelineProps = Astro.props;
 
 <style>
   .timeline {
-    --timeline-accent: #4cb963;
-
-    margin: 1.5rem 0 2.5rem;
+    margin: 1.75rem 0 2.5rem;
   }
 
-  .timeline__year {
+  .timeline__row {
     display: grid;
-    grid-template-columns: 7rem 1.5rem minmax(0, 1fr);
+    grid-template-columns: 6.5rem 1.25rem minmax(0, 1fr);
     column-gap: 1.25rem;
   }
 
-  .timeline__year-label {
-    font-size: 2.25rem;
+  .timeline__year {
+    font-size: 1.25rem;
     font-weight: 800;
-    line-height: 1;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
     color: var(--main-color);
+  }
+
+  .timeline__period {
+    margin-top: .125rem;
+
+    font-family: var(--font-mono);
+    font-size: .6875rem;
+    line-height: 1.6;
+    color: var(--text-color-highlight);
   }
 
   .timeline__rail {
@@ -71,58 +93,71 @@ const { years }: TimelineProps = Astro.props;
     justify-content: center;
   }
 
-  /* Vertical line connecting this year's dot to the next year */
+  /* Line down to the next row */
   .timeline__rail::before {
     content: '';
     position: absolute;
     top: 1.5rem;
-    bottom: .5rem;
+    bottom: -.25rem;
     width: 1px;
     background-color: var(--border-color);
   }
 
-  .timeline__year:last-child .timeline__rail::before {
-    display: none;
+  .timeline__row:last-child .timeline__rail::before {
+    bottom: 0;
   }
 
+  /* Past: hollow dot / current: filled accent dot with a soft ring */
   .timeline__dot {
+    position: relative;
+    z-index: 1;
+
     width: .75rem;
     height: .75rem;
-    margin-top: .75rem;
-    border: 3px solid color-mix(in srgb, var(--timeline-accent) 35%, transparent);
+    margin-top: .5rem;
+
+    border: 1px solid var(--placeholder);
     border-radius: 50%;
-    background-color: var(--timeline-accent);
-    background-clip: padding-box;
-    box-sizing: content-box;
+    background-color: var(--main-bg);
   }
 
-  .timeline__entries {
-    padding: .5rem 0 2.5rem;
+  .timeline__row--current .timeline__dot {
+    border: none;
+    background-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
   }
 
-  .timeline__entry {
-    display: grid;
-    grid-template-columns: 2.5rem minmax(0, 1fr);
-    gap: 1rem;
-  }
-
-  .timeline__entry + .timeline__entry {
-    margin-top: 1.25rem;
-  }
-
-  .timeline__month {
-    font-weight: 600;
-    line-height: 1.6;
-    color: var(--placeholder);
+  .timeline__body {
+    padding-bottom: 2.25rem;
   }
 
   .timeline__title {
-    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+
+    font-size: 1.0625rem;
+    font-weight: 700;
     line-height: 1.6;
     color: var(--main-color);
   }
 
+  .timeline__badge {
+    padding: .0625rem .4375rem;
+
+    font-size: .6875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--accent);
+
+    border-radius: .375rem;
+    background-color: var(--accent-soft);
+  }
+
   .timeline__description {
+    margin-top: .125rem;
+
     font-size: .875rem;
     color: var(--text-color);
   }
@@ -130,14 +165,17 @@ const { years }: TimelineProps = Astro.props;
   .timeline__items {
     display: flex;
     flex-direction: column;
-    gap: .375rem;
-    margin-top: .625rem;
+    gap: .625rem;
+
+    margin-top: .875rem;
   }
 
   .timeline__item {
     position: relative;
+
     padding-left: .875rem;
-    font-size: .9375rem;
+
+    font-size: .875rem;
     line-height: 1.6;
     color: var(--secondary-color);
   }
@@ -145,38 +183,37 @@ const { years }: TimelineProps = Astro.props;
   .timeline__item::before {
     content: '';
     position: absolute;
-    top: .7em;
+    top: .6em;
     left: 0;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background-color: var(--placeholder);
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 1px;
+    background-color: color-mix(in srgb, var(--accent) 45%, transparent);
   }
 
-  @media (max-width: 768px) {
+  .timeline__item strong {
+    font-weight: 600;
+    color: var(--main-color);
+  }
+
+  .timeline__sep {
+    color: var(--text-color-highlight);
+  }
+
+  @media (max-width: 767px) {
+    .timeline__row {
+      grid-template-columns: 4.75rem 1rem minmax(0, 1fr);
+      column-gap: .875rem;
+    }
+
     .timeline__year {
-      grid-template-columns: 1rem minmax(0, 1fr);
-      column-gap: .75rem;
+      font-size: 1.125rem;
     }
 
-    .timeline__year-label {
-      grid-column: 2;
-      font-size: 1.75rem;
-      margin-bottom: .5rem;
-    }
-
-    .timeline__rail {
-      grid-column: 1;
-      grid-row: 1 / span 2;
-    }
-
-    .timeline__dot {
-      margin-top: .5rem;
-    }
-
-    .timeline__entries {
-      grid-column: 2;
-      padding-top: 0;
+    .timeline__period {
+      font-size: .625rem;
     }
   }
 </style>
