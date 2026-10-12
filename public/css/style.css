@@ -3798,6 +3798,16 @@ body {
     word-break: keep-all;
 }
 
+/* Post body: larger reading text (1.5x); headings scale with it */
+.article:not(.article--page) .article__text-block {
+    font-size: 1.5rem;
+}
+
+.article:not(.article--page) .article__text-block h2 {
+    font-size: 1.25em;
+    line-height: 1.4;
+}
+
 /* Post body: images side by side in one row */
 .text-block .photo-row {
     display: grid;
