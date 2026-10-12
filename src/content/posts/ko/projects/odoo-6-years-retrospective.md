@@ -86,15 +86,15 @@ Odoo 개발을 시작하고 약 5년 동안은 AI의 도움 없이 개발해 왔
 <div class="photo-row">
   <figure>
     <img src="/img/posts/odoo-6-years-retrospective/conference-2022.jpg" alt="2022년 Odoo 행사 현장" loading="lazy" />
-    <figcaption>2022년 Odoo 로드쇼</figcaption>
+    <figcaption>2022년</figcaption>
   </figure>
   <figure>
     <img src="/img/posts/odoo-6-years-retrospective/conference-2024.jpg" alt="2024년 Odoo 행사 현장" loading="lazy" />
-    <figcaption>2024년 Odoo 행사</figcaption>
+    <figcaption>2024년</figcaption>
   </figure>
   <figure>
     <img src="/img/posts/odoo-6-years-retrospective/conference-2026.jpg" alt="2026년 Odoo 행사 현장" loading="lazy" />
-    <figcaption>2026년 Odoo Business Show</figcaption>
+    <figcaption>2026년</figcaption>
   </figure>
 </div>
 

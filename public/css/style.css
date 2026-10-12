@@ -3813,7 +3813,7 @@ body {
     aspect-ratio: 4 / 3;
     object-fit: cover;
     margin-bottom: 8px;
-    border-radius: 12px;
+    border-radius: 4px;
 }
 
 .text-block .photo-row figcaption {
