@@ -3796,6 +3796,15 @@ body {
     word-break: keep-all;
 }
 
+/* Post body: separate top-level sections with extra space */
+.article__text-block h2 {
+    margin-top: 3.5rem;
+}
+
+.article__text-block > h2:first-child {
+    margin-top: 0;
+}
+
 .article--page .text-block h2 {
     margin-top: 3.5rem;
 
