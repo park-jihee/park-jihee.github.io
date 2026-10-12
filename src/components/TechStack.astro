@@ -1,0 +1,34 @@
+---
+// Tech stack shown as labels (About page).
+interface TechStackProps {
+  items: string[];
+}
+
+const { items }: TechStackProps = Astro.props;
+---
+<div class="tech-stack">
+  {items.map((item) => <span class="tech-stack__label">{item}</span>)}
+</div>
+
+<style>
+  .tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+
+    margin: 1rem 0 2rem;
+  }
+
+  .tech-stack__label {
+    padding: .375rem .75rem;
+
+    font-family: var(--font-mono);
+    font-size: .8125rem;
+    line-height: 1.4;
+    color: var(--accent);
+
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    border-radius: .5rem;
+    background-color: var(--accent-soft);
+  }
+</style>

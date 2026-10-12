@@ -3,6 +3,7 @@ title: 소개 | 2l6l
 h1: 소개
 ---
 import Timeline from '@components/Timeline.astro';
+import TechStack from '@components/TechStack.astro';
 
 export const career = [
   {
@@ -59,15 +60,24 @@ export const career = [
   },
 ];
 
-안녕하세요. 에코두비즈 개발팀에서 Odoo ERP를 개발하고 있는 박지희입니다.
+안녕하세요. 6년 차 Odoo ERP 개발자 박지희입니다.
+
+유통·제조·바이오·서비스 등 다양한 업종에서 기업의 업무 환경에 맞는 ERP 시스템을 개발하고 커스터마이징해 왔습니다.
+
+최근에는 운영 중인 시스템의 데이터를 안전하게 관리하는 방법과 AI를 활용한 개발 방식 및 업무 효율화에 관심을 두고 있습니다.
+
+이 블로그에는 Odoo 개발 과정에서 마주한 문제와 해결 방법, 프로젝트를 통해 얻은 경험, 그리고 AI를 활용하며 배운 것들을 기록합니다.
 
 ## 하는 일
 
 - Odoo ERP 모듈 개발 및 커스터마이징
+- Odoo 버전 마이그레이션 (16 → 19) 및 기존 데이터 이관
+- 외부 서비스 연동 - 결제(포트원), 전자세금계산서 · 카카오 알림톡 · 팩스 · SMS(바로빌)
+- 운영 서버 배포, 장애 대응, 운영 데이터 정정
 
 ## 기술 스택
 
-- Python, PostgreSQL, JavaScript/OWL, Docker
+<TechStack items={['Python', 'Odoo ORM', 'PostgreSQL', 'JavaScript', 'OWL', 'QWeb']} />
 
 ## 학력 및 경력
 
