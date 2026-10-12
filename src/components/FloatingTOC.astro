@@ -36,6 +36,8 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
 <style>
   /* Lives in the post page's left column (.article-wrap__aside); hidden with it below 1024px. */
   .floating-toc {
+    /* Line the CONTENTS label up with the post title */
+    margin-top: 2.75rem;
     position: sticky;
     top: 4rem;
     max-height: 70vh;
@@ -87,7 +89,7 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
     margin-left: -1px;
     padding: .4375rem .875rem;
 
-    font-size: .8125rem;
+    font-size: 1.125rem;
     line-height: 1.4;
     color: var(--text-color-highlight);
     text-decoration: none;
@@ -101,15 +103,15 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
   }
 
   .floating-toc__link.active {
+    font-weight: 700;
     color: var(--accent);
     border-left-color: var(--accent);
   }
 
+  /* Long titles wrap instead of being cut off */
   .floating-toc__text {
     display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    word-break: keep-all;
   }
 
   @keyframes fadeIn {
