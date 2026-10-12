@@ -1,8 +1,8 @@
 ---
 title: '6년 차 Odoo 개발자가 돌아보는 ERP 프로젝트'
 description: 'Odoo ERP 개발 6년 동안의 프로젝트와 달라진 개발 방식을 돌아봅니다'
-date: '2026-10-12'
-image: '/img/posts/placeholder-projects.svg'
+date: '2026-10-10'
+image: '/img/posts/odoo-6-years-retrospective/conference-2026.jpg'
 permalink: 'odoo-6-years-retrospective'
 aiGenerated: false
 tags: ['odoo', 'retrospective']
