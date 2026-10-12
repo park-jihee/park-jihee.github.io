@@ -3798,9 +3798,9 @@ body {
     word-break: keep-all;
 }
 
-/* Post body: larger reading text (1.5x); headings scale with it */
+/* Post body: larger reading text (18px); headings scale with it */
 .article:not(.article--page) .article__text-block {
-    font-size: 1.5rem;
+    font-size: 1.125rem;
 }
 
 .article:not(.article--page) .article__text-block h2 {
