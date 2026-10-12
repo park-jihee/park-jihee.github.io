@@ -1,6 +1,4 @@
 ---
-import Icon from '@components/Icon.astro';
-import { useTranslations } from '@i18n/utils';
 import type { LocaleCode } from '@config/locales';
 
 export interface Props {
@@ -9,18 +7,17 @@ export interface Props {
     text: string;
     slug: string;
   }>;
-  lang: LocaleCode;
+  lang?: LocaleCode;
 }
 
-const { headings, lang } = Astro.props;
-const t = useTranslations(lang);
+const { headings } = Astro.props;
 
 const tocHeadings = headings.filter((heading) => heading.depth === 2);
 ---
 {tocHeadings.length > 0 && (
   <aside class="floating-toc" aria-label="Table of contents">
     <div class="floating-toc__inner">
-      <div class="floating-toc__header title"><Icon name="toc" class="icon" /> {t('ui.contents')}</div>
+      <div class="floating-toc__header">CONTENTS</div>
       <nav class="floating-toc__nav">
         {tocHeadings.map((heading) => (
           <a
@@ -68,45 +65,44 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
   }
 
   .floating-toc__header {
-    display: flex;
-    align-items: center;
-    gap: .25rem;
-    margin-bottom: .75rem;
+    margin-bottom: 1rem;
+
+    font-family: var(--font-mono);
+    font-size: .6875rem;
+    letter-spacing: .08em;
+    color: var(--text-color-highlight);
   }
 
+  /* Vertical guide line; the active item draws a thicker accent segment on it */
   .floating-toc__nav {
     display: flex;
     flex-direction: column;
-    gap: 0.125rem;
+
+    border-left: 1px solid var(--border-color);
   }
 
   .floating-toc__link {
     display: block;
-    padding: 0.375rem 1rem;
-    color: var(--text-color);
-    text-decoration: none;
-    font-size: 0.875rem;
+
+    margin-left: -1px;
+    padding: .4375rem .875rem;
+
+    font-size: .8125rem;
     line-height: 1.4;
-    opacity: 0.6;
-    transition: all 0.2s ease;
+    color: var(--text-color-highlight);
+    text-decoration: none;
+
     border-left: 2px solid transparent;
-    position: relative;
+    transition: color .2s ease, border-color .2s ease;
   }
 
   .floating-toc__link:hover {
-    opacity: 1;
     color: var(--main-color);
   }
 
   .floating-toc__link.active {
-    opacity: 1;
-    color: var(--main-color);
-    border-left-color: var(--main-color);
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.02), transparent);
-  }
-
-  :global(.dark-mode) .floating-toc__link.active {
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.02), transparent);
+    color: var(--accent);
+    border-left-color: var(--accent);
   }
 
   .floating-toc__text {

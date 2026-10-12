@@ -17,6 +17,18 @@ const {
 } = Astro.props;
 
 const lang = getPageLanguage(entry);
+const pageTitle = entry.data.h1 ?? entry.data.title;
+
+// Headline lines; **word** is highlighted
+const headlineLines = (entry.data.headline ?? []).map((line) =>
+  line.split('**').map((text, index) => ({ text, highlight: index % 2 === 1 })),
+);
+
+// With a hero, the TOC starts with a link back to the top of the page
+const tocHeadings =
+  headlineLines.length > 0
+    ? [{ depth: 2, slug: 'page-top', text: pageTitle }, ...headings]
+    : headings;
 ---
 <Layout
   title={entry.data.title}
@@ -25,14 +37,27 @@ const lang = getPageLanguage(entry);
 >
   <div class="article-wrap article-wrap--with-aside">
     <aside class="article-wrap__aside">
-      {headings.length > 0 && <FloatingTOC headings={headings} lang={lang} />}
+      {tocHeadings.length > 0 && <FloatingTOC headings={tocHeadings} lang={lang} />}
     </aside>
 
-    <div class="article">
+    <div class="article article--page">
       <article>
-        <div class="article__head">
-          <h1 class="h1">{entry.data.h1 ?? entry.data.title}</h1>
-        </div>
+        {headlineLines.length > 0 ? (
+          <header class="page-hero" id="page-top">
+            {entry.data.eyebrow && <div class="page-hero__eyebrow">{entry.data.eyebrow}</div>}
+            <h1 class="page-hero__title">
+              {headlineLines.map((parts) => (
+                <span class="page-hero__line">
+                  {parts.map((part) => (part.highlight ? <mark>{part.text}</mark> : part.text))}
+                </span>
+              ))}
+            </h1>
+          </header>
+        ) : (
+          <div class="article__head">
+            <h1 class="h1">{pageTitle}</h1>
+          </div>
+        )}
 
         <InlineTOC headings={headings} />
 

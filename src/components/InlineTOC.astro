@@ -150,12 +150,13 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
     text-overflow: ellipsis;
   }
 
-  .toc-fold__chevron {
+  /* Icon is rendered by a child component, so the class needs :global */
+  .toc-fold__summary :global(.toc-fold__chevron) {
     color: var(--text-color-highlight);
     transition: transform .2s ease;
   }
 
-  .toc-fold[open] .toc-fold__chevron {
+  .toc-fold[open] .toc-fold__summary :global(.toc-fold__chevron) {
     transform: rotate(180deg);
   }
 

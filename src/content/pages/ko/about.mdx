@@ -1,9 +1,14 @@
 ---
 title: 소개 | 2l6l
 h1: 소개
+eyebrow: '// about'
+headline:
+  - '안녕하세요.'
+  - '6년 차 **Odoo ERP** 개발자 박지희입니다.'
 ---
 import Timeline from '@components/Timeline.astro';
 import TechStack from '@components/TechStack.astro';
+import CardGrid from '@components/CardGrid.astro';
 
 export const career = [
   {
@@ -60,8 +65,6 @@ export const career = [
   },
 ];
 
-안녕하세요. 6년 차 Odoo ERP 개발자 박지희입니다.
-
 유통·제조·바이오·서비스 등 다양한 업종에서 기업의 업무 환경에 맞는 ERP 시스템을 개발하고 커스터마이징해 왔습니다.
 
 최근에는 운영 중인 시스템의 데이터를 안전하게 관리하는 방법과 AI를 활용한 개발 방식 및 업무 효율화에 관심을 두고 있습니다.
@@ -70,10 +73,14 @@ export const career = [
 
 ## 하는 일
 
-- Odoo ERP 모듈 개발 및 커스터마이징
-- Odoo 버전 마이그레이션 (16 → 19) 및 기존 데이터 이관
-- 외부 서비스 연동 - 결제(포트원), 전자세금계산서 · 카카오 알림톡 · 팩스 · SMS(바로빌)
-- 운영 서버 배포, 장애 대응, 운영 데이터 정정
+<CardGrid
+  items={[
+    { title: '모듈 개발', description: 'Odoo ERP 모듈 개발 및 커스터마이징' },
+    { title: '버전 마이그레이션', description: 'Odoo 16 → 19 마이그레이션 및 기존 데이터 이관' },
+    { title: '외부 서비스 연동', description: '결제(포트원), 전자세금계산서 · 카카오 알림톡 · 팩스 · SMS(바로빌)' },
+    { title: '운영', description: '운영 서버 배포, 장애 대응, 운영 데이터 정정' },
+  ]}
+/>
 
 ## 기술 스택
 
@@ -85,5 +92,9 @@ export const career = [
 
 ## 연락처
 
-- GitHub: [park-jihee](https://github.com/park-jihee)
-- Email: [parkjihee@ecodoobiz.com](mailto:parkjihee@ecodoobiz.com)
+<CardGrid
+  items={[
+    { label: 'GitHub', title: 'park-jihee', href: 'https://github.com/park-jihee' },
+    { label: 'Email', title: 'parkjihee@ecodoobiz.com', href: 'mailto:parkjihee@ecodoobiz.com' },
+  ]}
+/>

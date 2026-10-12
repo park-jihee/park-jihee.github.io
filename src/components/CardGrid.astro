@@ -1,0 +1,118 @@
+---
+// Two-column card grid (About page: 하는 일, 연락처).
+// label: small mono text above the title; href: makes the whole card a link with an ↗ icon.
+import Icon from '@components/Icon.astro';
+
+export interface CardItem {
+  label?: string;
+  title: string;
+  description?: string;
+  href?: string;
+}
+
+interface CardGridProps {
+  items: CardItem[];
+}
+
+const { items }: CardGridProps = Astro.props;
+const isExternal = (href: string) => /^(https?:|mailto:)/.test(href);
+---
+<div class="card-grid">
+  {items.map((item) => {
+    const Tag = item.href ? 'a' : 'div';
+    const linkProps = item.href
+      ? {
+          href: item.href,
+          ...(isExternal(item.href) ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
+        }
+      : {};
+    return (
+      <Tag class:list={['card-grid__card', { 'card-grid__card--link': item.href }]} {...linkProps}>
+        <div class="card-grid__text">
+          {item.label && <div class="card-grid__label">{item.label}</div>}
+          <div class="card-grid__title">{item.title}</div>
+          {item.description && <div class="card-grid__description">{item.description}</div>}
+        </div>
+        {item.href && <Icon name="north_east" class="card-grid__icon" />}
+      </Tag>
+    );
+  })}
+</div>
+
+<style>
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .75rem;
+
+    margin: 1rem 0 2.5rem;
+  }
+
+  .card-grid__card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: .75rem;
+
+    padding: 1.125rem 1.25rem;
+
+    border: 1px solid var(--border-color);
+    border-radius: .875rem;
+    background-color: var(--context-bg);
+  }
+
+  /* Links inside .text-block get an underline; cards should not */
+  .card-grid__card--link {
+    align-items: flex-end;
+    color: inherit;
+    border: 1px solid var(--border-color);
+    opacity: 1;
+    text-decoration: none;
+    transition: border-color .2s ease;
+  }
+
+  .card-grid__card--link:hover {
+    border-color: var(--accent);
+  }
+
+  .card-grid__text {
+    min-width: 0;
+  }
+
+  .card-grid__label {
+    margin-bottom: .25rem;
+
+    font-family: var(--font-mono);
+    font-size: .6875rem;
+    color: var(--text-color-highlight);
+  }
+
+  .card-grid__title {
+    font-size: .9375rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--main-color);
+    word-break: break-all;
+  }
+
+  .card-grid__description {
+    margin-top: .375rem;
+
+    font-size: .8125rem;
+    line-height: 1.6;
+    color: var(--text-color);
+  }
+
+  /* Icon is rendered by a child component, so the class needs :global */
+  .card-grid__card :global(.card-grid__icon) {
+    flex-shrink: 0;
+    font-size: 1rem;
+    color: var(--accent);
+  }
+
+  @media (max-width: 767px) {
+    .card-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

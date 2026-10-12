@@ -3754,3 +3754,56 @@ body {
     color: var(--accent);
     background-color: var(--accent-soft);
 }
+
+/* ---------- About-style pages (Page layout) ---------- */
+.page-hero {
+    margin-bottom: 2rem;
+    scroll-margin-top: 6rem;
+}
+
+.page-hero__eyebrow {
+    margin-bottom: 1rem;
+
+    font-family: var(--font-mono);
+    font-size: .8125rem;
+    color: var(--accent);
+}
+
+.page-hero__title {
+    margin: 0;
+
+    font-size: clamp(1.75rem, 3.2vw, 2.375rem);
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: -0.03em;
+    color: var(--main-color);
+    word-break: keep-all;
+}
+
+.page-hero__line {
+    display: block;
+}
+
+.page-hero__title mark {
+    padding: 0 .125em;
+
+    color: var(--accent);
+    background: linear-gradient(to top, var(--accent-soft) 45%, transparent 45%);
+}
+
+.article--page .text-block > p {
+    max-width: 38rem;
+    line-height: 1.9;
+}
+
+.article--page .text-block h2 {
+    margin-top: 3.5rem;
+
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.article--page .text-block h2::before {
+    content: '# ';
+    color: var(--accent);
+}

@@ -22,6 +22,9 @@ const pages = defineCollection({
     title: z.string(),
     h1: z.string().optional(),
     description: z.string().optional(),
+    // Optional page hero: small label + large headline (one string per line, **word** highlighted)
+    eyebrow: z.string().optional(),
+    headline: z.array(z.string()).optional(),
     permalink: z.string().optional(),
     draft: z.boolean().default(false),
   }),
