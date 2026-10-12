@@ -3796,6 +3796,30 @@ body {
     word-break: keep-all;
 }
 
+/* Post body: images side by side in one row */
+.text-block .photo-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.text-block .photo-row figure {
+    margin: 0;
+}
+
+.text-block .photo-row img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    margin-bottom: 8px;
+    border-radius: 12px;
+}
+
+.text-block .photo-row figcaption {
+    margin-bottom: 0;
+}
+
 /* Post body: separate top-level sections with extra space */
 .article__text-block h2 {
     margin-top: 3.5rem;
