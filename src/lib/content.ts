@@ -234,15 +234,19 @@ export function cleanMarkdown(body: string): string {
     .trim();
 }
 
-// Summary shown in post lists: description → announcement → start of the body.
-export function getPostSummary(entry: PostEntry, maxLength = 200): string {
-  const explicit = entry.data.description ?? entry.data.announcement;
-  if (explicit) {
-    return explicit;
+// Summary shown in post lists: start of the body text (headings and captions skipped),
+// falling back to description → announcement for posts without body text.
+export function getPostSummary(entry: PostEntry, maxLength = 300): string {
+  const bodyText = cleanMarkdown(
+    entry.body
+      .replace(/^#+\s.*$/gm, '')
+      .replace(/<figcaption>[\s\S]*?<\/figcaption>/g, '')
+  );
+  if (bodyText) {
+    return bodyText.length > maxLength ? `${bodyText.slice(0, maxLength).trim()}…` : bodyText;
   }
 
-  const text = cleanMarkdown(entry.body);
-  return text.length > maxLength ? `${text.slice(0, maxLength).trim()}…` : text;
+  return entry.data.description ?? entry.data.announcement ?? '';
 }
 
 // Rough reading time in minutes (Korean ≈ 500 characters per minute).
