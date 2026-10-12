@@ -29,7 +29,7 @@ const siteConfig: SiteConfig = {
     email: 'parkjihee@ecodoobiz.com',
     avatar: '/img/avatar.png',
     bio: {
-      ko: 'Odoo ERP 개발자.\n개발과 AI 이야기를 씁니다.',
+      ko: '6년차 Odoo ERP 개발자',
     },
   },
 
