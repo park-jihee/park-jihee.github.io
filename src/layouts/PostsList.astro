@@ -16,7 +16,7 @@ import {
   groupPostsByLocales,
 } from '@lib/content';
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@lib/language';
-import { formatDate } from '@lib/format';
+import { formatDotDate } from '@lib/format';
 import { ensureTrailingSlash } from '@utils/url';
 import {
   getLangFromUrl,
@@ -77,13 +77,6 @@ const nextPageUrl = page.url.next
 const categoryMeta = categoryId ? getCategoryConfig(categoryId) : null;
 
 
-const formatDotDate = (date: Date) =>
-  [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, '0'),
-    String(date.getDate()).padStart(2, '0'),
-  ].join('.');
-
 const isHome = !categoryId && page.currentPage === 1;
 
 // Headline lines; **word** is highlighted
@@ -93,6 +86,7 @@ const headlineLines = (siteConfig.home.headline[lang] ?? siteConfig.home.headlin
 
 const postCountLabel = `${String(page.total).padStart(2, '0')} ${page.total === 1 ? 'post' : 'posts'}`;
 const bio = siteConfig.author.bio[lang] ?? siteConfig.author.bio[DEFAULT_LOCALE];
+const company = siteConfig.profileLinks.find((item) => !item.url)?.value;
 const currentYear = new Date().getFullYear();
 
 const postsWithMetadata = posts.map((post) => {
@@ -235,6 +229,36 @@ if (defaultAlternate) {
 
       <div class="sidebar__copy">© {currentYear} {t('name')}</div>
     </aside>
+
+    <section class="profile-strip">
+      <div class="profile-strip__main">
+        <div class="profile-strip__name">{t('name')}</div>
+        <div class="profile-strip__bio">
+          {bio}{company && <span class="profile-strip__company"> · {company}</span>}
+        </div>
+        <div class="profile-strip__links">
+          {siteConfig.profileLinks.map((item) =>
+            item.url ? (
+              <a href={item.url} target="_blank" rel="noopener noreferrer" class="profile-strip__link">
+                <span class="profile-strip__label">{item.label}</span>
+                <span>{item.value}</span>
+                <Icon name="north_east" />
+              </a>
+            ) : (
+              <span class="profile-strip__link">
+                <span class="profile-strip__label">{item.label}</span>
+                <span>{item.value}</span>
+              </span>
+            ),
+          )}
+        </div>
+      </div>
+      <a href={aboutHref} class="profile-strip__about">
+        <span class="profile-strip__about-long">{t('ui.about_page')}</span>
+        <span class="profile-strip__about-short">{t('ui.about')}</span>
+        <Icon name="arrow_forward" />
+      </a>
+    </section>
 
     <div class="content-center">
       <div id="search-results" style="display: none;"></div>

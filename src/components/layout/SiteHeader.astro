@@ -26,6 +26,7 @@ interface SiteHeaderProps {
   languageOptions: LanguageOption[];
   showSearch: boolean;
   enableDarkMode: boolean;
+  backLink?: { href: string; label: string };
 }
 
 const {
@@ -36,10 +37,16 @@ const {
   languageOptions,
   showSearch,
   enableDarkMode,
+  backLink,
 }: SiteHeaderProps = Astro.props;
 ---
-<header class="header">
+<header class:list={['header', { 'header--has-back': backLink }]}>
   <div class="cont flex">
+    {backLink && (
+      <a href={backLink.href} class="header__back">
+        <Icon name="arrow_back" /> {backLink.label}
+      </a>
+    )}
     <div class="header__left">
       <a href={homeHref} class="header__logo">
         <span class="header__logo-mark" aria-hidden="true"></span>{siteTitle}
@@ -51,7 +58,9 @@ const {
     <div class="header__nav">
       {showSearch && (
         <form class="header__search" role="search" action={homeHref} method="get">
-          <Icon name="search" class="header__search-icon" />
+          <button type="button" class="header__search-btn" aria-label="검색 열기">
+            <Icon name="search" class="header__search-icon" />
+          </button>
           <input
             type="search"
             name="q"
@@ -70,9 +79,28 @@ const {
         </button>
       )}
       {languageOptions.length > 1 && <LanguageSwitcher lang={lang} options={languageOptions} />}
-      <button type="button" class="header__menu-toggle" aria-label="Toggle menu">
+      <button type="button" class="header__menu-toggle" aria-label="메뉴 열기">
         <Icon name="menu" class="header__menu-icon" />
       </button>
     </div>
   </div>
+  {backLink && <div class="header__progress" aria-hidden="true"><span class="header__progress-bar"></span></div>}
 </header>
+
+{backLink && (
+  <script is:inline>
+    // Reading progress bar on post pages
+    (() => {
+      const bar = document.querySelector('.header__progress-bar');
+      if (!bar) return;
+      const update = () => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+        bar.style.transform = `scaleX(${ratio})`;
+      };
+      update();
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update, { passive: true });
+    })();
+  </script>
+)}

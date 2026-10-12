@@ -1,35 +1,22 @@
 const MENU_ID = 'mobile-menu';
 const TOGGLE_SELECTOR = '.header__menu-toggle';
+const CLOSE_SELECTOR = '.mobile-menu__close';
 
-let documentListenerAttached = false;
-let resizeListenerAttached = false;
-let astroSwapListenerAttached = false;
+let globalListenersAttached = false;
 
-const closeMenu = () => {
+const setMenuOpen = (open: boolean) => {
   const menu = document.getElementById(MENU_ID);
-  if (menu) {
-    menu.classList.remove('active');
-  }
-};
-
-const handleDocumentClick = (event: MouseEvent) => {
-  const menu = document.getElementById(MENU_ID);
-  const toggle = document.querySelector<HTMLElement>(TOGGLE_SELECTOR);
-  if (!menu || !toggle) {
+  if (!menu) {
     return;
   }
 
-  const target = event.target as Node;
-  if (!menu.contains(target) && !toggle.contains(target)) {
-    closeMenu();
-  }
+  menu.classList.toggle('active', open);
+  menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+  // The menu covers the whole screen, so the page behind it should not scroll
+  document.body.classList.toggle('lock', open);
 };
 
-const handleResize = () => {
-  if (window.innerWidth > 768) {
-    closeMenu();
-  }
-};
+const closeMenu = () => setMenuOpen(false);
 
 export const initMobileMenu = () => {
   const menu = document.getElementById(MENU_ID);
@@ -42,22 +29,28 @@ export const initMobileMenu = () => {
     toggle.dataset.mobileMenuInit = 'true';
     toggle.addEventListener('click', (event) => {
       event.stopPropagation();
-      menu.classList.toggle('active');
+      setMenuOpen(!menu.classList.contains('active'));
     });
+
+    menu.querySelector(CLOSE_SELECTOR)?.addEventListener('click', closeMenu);
   }
 
-  if (!documentListenerAttached) {
-    documentListenerAttached = true;
-    document.addEventListener('click', handleDocumentClick);
-  }
-
-  if (!resizeListenerAttached) {
-    resizeListenerAttached = true;
-    window.addEventListener('resize', handleResize, { passive: true });
-  }
-
-  if (!astroSwapListenerAttached) {
-    astroSwapListenerAttached = true;
+  if (!globalListenersAttached) {
+    globalListenersAttached = true;
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeMenu();
+      }
+    });
+    window.addEventListener(
+      'resize',
+      () => {
+        if (window.innerWidth >= 768) {
+          closeMenu();
+        }
+      },
+      { passive: true },
+    );
     document.addEventListener('astro:after-swap', closeMenu);
   }
 };

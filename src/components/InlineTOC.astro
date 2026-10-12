@@ -1,0 +1,184 @@
+---
+// Table of contents shown inside the article on tablet (box) and mobile (fold-out).
+// On desktop the left-column FloatingTOC is used instead.
+import Icon from '@components/Icon.astro';
+
+export interface Props {
+  headings: Array<{ depth: number; text: string; slug: string }>;
+}
+
+const { headings } = Astro.props;
+const tocHeadings = headings.filter((heading) => heading.depth === 2);
+---
+{tocHeadings.length > 0 && (
+  <>
+    <nav class="toc-box" aria-label="Table of contents">
+      <div class="toc-box__label">CONTENTS</div>
+      {tocHeadings.map((heading) => (
+        <a href={`#${heading.slug}`} class="toc-box__link">{heading.text}</a>
+      ))}
+    </nav>
+
+    <details class="toc-fold">
+      <summary class="toc-fold__summary">
+        <span class="toc-fold__label">목차</span>
+        <span class="toc-fold__current">{tocHeadings[0].text}</span>
+        <Icon name="expand_more" class="toc-fold__chevron" />
+      </summary>
+      <nav class="toc-fold__list" aria-label="Table of contents">
+        {tocHeadings.map((heading) => (
+          <a href={`#${heading.slug}`} class="toc-fold__link" data-slug={heading.slug}>{heading.text}</a>
+        ))}
+      </nav>
+    </details>
+  </>
+)}
+
+<script>
+  // Mobile fold-out: show the section currently being read, close after picking one
+  const fold = document.querySelector<HTMLDetailsElement>('.toc-fold');
+  if (fold) {
+    const current = fold.querySelector<HTMLElement>('.toc-fold__current');
+    const links = Array.from(fold.querySelectorAll<HTMLAnchorElement>('.toc-fold__link'));
+
+    links.forEach((link) => {
+      link.addEventListener('click', () => {
+        fold.open = false;
+      });
+    });
+
+    const headings = links
+      .map((link) => document.getElementById(link.dataset.slug ?? ''))
+      .filter((heading): heading is HTMLElement => Boolean(heading));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && current) {
+            current.textContent = entry.target.textContent?.trim() ?? '';
+          }
+        });
+      },
+      { rootMargin: '-120px 0px -70% 0px' },
+    );
+
+    headings.forEach((heading) => observer.observe(heading));
+  }
+</script>
+
+<style>
+  .toc-box,
+  .toc-fold {
+    display: none;
+  }
+
+  /* Tablet: always-open box */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .toc-box {
+      display: flex;
+      flex-direction: column;
+      gap: .375rem;
+
+      margin-bottom: 2rem;
+      padding: 1rem 1.125rem;
+
+      border-radius: .875rem;
+      background-color: var(--secondary-bg);
+    }
+  }
+
+  .toc-box__label {
+    margin-bottom: .25rem;
+
+    font-family: var(--font-mono);
+    font-size: .6875rem;
+    letter-spacing: .08em;
+    color: var(--text-color-highlight);
+  }
+
+  .toc-box__link {
+    padding-left: .625rem;
+
+    font-size: .875rem;
+    color: var(--accent);
+
+    border-left: 2px solid var(--accent);
+  }
+
+  /* Mobile: fold-out */
+  @media (max-width: 767px) {
+    .toc-fold {
+      display: block;
+
+      margin-bottom: 1.75rem;
+
+      border: 1px solid var(--border-color);
+      border-radius: .75rem;
+    }
+  }
+
+  .toc-fold__summary {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+
+    padding: .75rem 1rem;
+
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .toc-fold__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .toc-fold__label {
+    flex-shrink: 0;
+
+    font-family: var(--font-mono);
+    font-size: .6875rem;
+    color: var(--text-color-highlight);
+  }
+
+  .toc-fold__current {
+    overflow: hidden;
+    flex: 1;
+
+    font-size: .875rem;
+    color: var(--main-color);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .toc-fold__chevron {
+    color: var(--text-color-highlight);
+    transition: transform .2s ease;
+  }
+
+  .toc-fold[open] .toc-fold__chevron {
+    transform: rotate(180deg);
+  }
+
+  .toc-fold__list {
+    display: flex;
+    flex-direction: column;
+
+    padding: .25rem .5rem .5rem;
+
+    border-top: 1px solid var(--border-color);
+  }
+
+  .toc-fold__link {
+    padding: .5rem;
+
+    font-size: .875rem;
+    color: var(--text-color);
+
+    border-radius: .5rem;
+  }
+
+  .toc-fold__link:hover {
+    color: var(--accent);
+    background-color: var(--accent-soft);
+  }
+</style>

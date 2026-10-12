@@ -14,7 +14,8 @@ import {
   getPostLanguage,
   getPostCategory,
 } from '@lib/content';
-import { formatDate } from '@lib/format';
+import { formatDotDate } from '@lib/format';
+import InlineTOC from '@components/InlineTOC.astro';
 import { DEFAULT_LOCALE } from '@lib/language';
 import { useTranslations, useTranslatedPath } from '@i18n/utils';
 
@@ -31,7 +32,7 @@ const {
 const lang = getPostLanguage(entry);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
-const publishedDate = formatDate(entry.data.date, lang, 'compact');
+const publishedDate = formatDotDate(entry.data.date);
 const heroImage = getPostImage(entry);
 const categoryKey = getPostCategory(entry);
 const categoryConfig = getCategoryConfig(categoryKey);
@@ -90,6 +91,7 @@ const alternates = (() => {
   publishedAt={publishedIso ?? undefined}
   authorName={authorName}
   section={categoryLabel ?? undefined}
+  backLink={{ href: translatePath('/'), label: t('ui.all_posts') }}
   enableCodeHighlight
 >
   <div class="article-wrap article-wrap--with-aside">
@@ -100,6 +102,16 @@ const alternates = (() => {
     <div class="article">
       <article>
         <div class="article__head">
+          <a href={translatePath('/')} class="article__back">
+            <Icon name="arrow_back" /> {t('ui.all_posts')}
+          </a>
+
+          {categoryLabel && (
+            <a href={translatePath(getCategoryPath(categoryKey))} class="article__chip">
+              {categoryConfig?.icon && <Icon name={categoryConfig.icon} />} {categoryLabel}
+            </a>
+          )}
+
           <h1 class="h1">{entry.data.h1 ?? entry.data.title}</h1>
 
           <div class="article__nav">
@@ -121,6 +133,8 @@ const alternates = (() => {
             </div>
           </div>
         </div>
+
+        <InlineTOC headings={headings} />
 
         {entry.data.aiGenerated && <AIWarning />}
 

@@ -1,7 +1,18 @@
 ---
+// Full-screen menu on mobile: categories with post counts + profile.
+import Icon from '@components/Icon.astro';
 import LanguageSwitcher from '@components/LanguageSwitcher.astro';
-import NavLinks from '@components/layout/NavLinks.astro';
-import CategoriesList from '@components/CategoriesList.astro';
+import siteConfig from '@config/site';
+import {
+  getCategoryConfig,
+  getCategoryPath,
+  getEnabledCategoryIds,
+  getPostCategory,
+  getPosts,
+} from '@lib/content';
+import { DEFAULT_LOCALE } from '@lib/language';
+import { ensureTrailingSlash } from '@utils/url';
+import { useTranslatedPath, useTranslations } from '@i18n/utils';
 
 type NavItem = {
   id: string;
@@ -20,20 +31,93 @@ type LanguageOption = {
 
 interface MobileMenuProps {
   lang: string;
+  siteTitle: string;
+  homeHref: string;
   navItems: NavItem[];
   languageOptions: LanguageOption[];
 }
 
-const { lang, navItems, languageOptions }: MobileMenuProps = Astro.props;
+const { lang, siteTitle, homeHref, navItems, languageOptions }: MobileMenuProps = Astro.props;
+const t = useTranslations(lang as typeof DEFAULT_LOCALE);
+const translatePath = useTranslatedPath(lang as typeof DEFAULT_LOCALE);
+
+const posts = await getPosts({ lang });
+const currentPath = ensureTrailingSlash(Astro.url.pathname);
+const isAllActive = currentPath === homeHref || /^\/\d+\/$/.test(currentPath);
+
+const categories = [
+  { href: homeHref, label: t('ui.all'), count: posts.length, active: isAllActive },
+  ...getEnabledCategoryIds().map((key) => {
+    const config = getCategoryConfig(key);
+    const href = translatePath(getCategoryPath(key));
+    return {
+      href,
+      label: config?.label?.[lang] ?? config?.label?.[DEFAULT_LOCALE] ?? key,
+      count: posts.filter((post) => getPostCategory(post) === key).length,
+      active: currentPath.startsWith(href),
+    };
+  }),
+];
+
+const aboutHref = navItems.find((item) => item.id === 'about')?.href ?? translatePath('/about');
+const name = siteConfig.author.name[lang] ?? siteConfig.author.name[DEFAULT_LOCALE];
+const bio = siteConfig.author.bio[lang] ?? siteConfig.author.bio[DEFAULT_LOCALE];
 ---
-<div class="mobile-menu" id="mobile-menu">
-  <div class="cont">
-    <nav class="mobile-menu__nav">
-      <CategoriesList variant="mobile" />
-      <NavLinks navItems={navItems} variant="mobile" />
-      {languageOptions.length > 1 && (
-        <LanguageSwitcher lang={lang} options={languageOptions} variant="mobile" />
-      )}
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <div class="mobile-menu__top">
+    <a href={homeHref} class="header__logo">
+      <span class="header__logo-mark" aria-hidden="true"></span>{siteTitle}
+    </a>
+    <button type="button" class="mobile-menu__close" aria-label="메뉴 닫기">
+      <Icon name="close" />
+    </button>
+  </div>
+
+  <div class="mobile-menu__body">
+    <div class="mobile-menu__label">CATEGORY</div>
+    <nav class="mobile-menu__categories">
+      {categories.map((category) => (
+        <a
+          href={category.href}
+          class="mobile-menu__category"
+          data-active={category.active ? 'true' : 'false'}
+        >
+          <span>{category.label}</span>
+          <span class="mobile-menu__count">{category.count}</span>
+        </a>
+      ))}
     </nav>
+
+    <div class="mobile-menu__profile">
+      <div class="profile-card__name">{name}</div>
+      <p class="profile-card__bio">{bio}</p>
+
+      <dl class="profile-info">
+        {siteConfig.profileLinks.map((item) => (
+          <div class="profile-info__row">
+            <dt class="profile-info__label">{item.label}</dt>
+            <dd class="profile-info__value">
+              {item.url ? (
+                <a href={item.url} target="_blank" rel="noopener noreferrer">
+                  <span>{item.value}</span>
+                  <Icon name="north_east" />
+                </a>
+              ) : (
+                item.value
+              )}
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <a href={aboutHref} class="profile-about-btn">
+        <span>{t('ui.about_page')}</span>
+        <Icon name="arrow_forward" />
+      </a>
+    </div>
+
+    {languageOptions.length > 1 && (
+      <LanguageSwitcher lang={lang} options={languageOptions} variant="mobile" />
+    )}
   </div>
 </div>

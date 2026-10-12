@@ -247,12 +247,34 @@ export const initSearch = () => {
   }
   searchInput.dataset.searchInit = 'true';
 
+  // On tablet/mobile the search box is collapsed to an icon; opening it expands over the header
+  const openSearch = () => {
+    searchForm.classList.add('is-open');
+    searchInput.focus();
+    searchInput.select();
+  };
+  const closeSearch = () => {
+    searchForm.classList.remove('is-open');
+  };
+
+  searchForm.querySelector('.header__search-btn')?.addEventListener('click', openSearch);
+  searchInput.addEventListener('blur', () => {
+    if (!searchInput.value.trim()) {
+      closeSearch();
+    }
+  });
+  searchInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      searchInput.blur();
+      closeSearch();
+    }
+  });
+
   // Cmd/Ctrl+K focuses the header search box
   document.addEventListener('keydown', (event) => {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
       event.preventDefault();
-      searchInput.focus();
-      searchInput.select();
+      openSearch();
     }
   });
 
@@ -329,7 +351,6 @@ export const initSearch = () => {
     if (event.key === 'Escape') {
       searchInput.value = '';
       resetView();
-      searchInput.blur();
     }
   });
 
@@ -339,6 +360,7 @@ export const initSearch = () => {
   const initialQuery = new URLSearchParams(window.location.search).get('q');
   if (initialQuery) {
     searchInput.value = initialQuery;
+    searchForm.classList.add('is-open');
     handleSearchTerm();
   }
 };

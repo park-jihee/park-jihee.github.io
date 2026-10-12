@@ -1,6 +1,7 @@
 ---
 import Layout from './Layout.astro';
 import FloatingTOC from '@components/FloatingTOC.astro';
+import InlineTOC from '@components/InlineTOC.astro';
 import { type PageEntry, getPageLanguage } from '@lib/content';
 
 const {
@@ -32,6 +33,8 @@ const lang = getPageLanguage(entry);
         <div class="article__head">
           <h1 class="h1">{entry.data.h1 ?? entry.data.title}</h1>
         </div>
+
+        <InlineTOC headings={headings} />
 
         <div class="text-block article__text-block">
           <Content />

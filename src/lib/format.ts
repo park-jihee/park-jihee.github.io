@@ -22,3 +22,12 @@ export function formatDate(date: Date, lang: string, variant: DateFormatVariant 
 
   return new Intl.DateTimeFormat(locale, options).format(date);
 }
+
+// "2026.10.10" style used in post lists and post headers
+export function formatDotDate(date: Date) {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0'),
+  ].join('.');
+}
