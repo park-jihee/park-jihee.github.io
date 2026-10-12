@@ -3792,8 +3792,8 @@ body {
 }
 
 .article--page .text-block > p {
-    max-width: 38rem;
     line-height: 1.9;
+    word-break: keep-all;
 }
 
 .article--page .text-block h2 {
