@@ -22,12 +22,12 @@ type SearchPost = {
   publishedAt?: string;
 };
 
-const SEARCH_INPUT_SELECTOR = '.search input';
+const SEARCH_INPUT_SELECTOR = '.header__search-input';
+const SEARCH_FORM_SELECTOR = '.header__search';
 const SEARCH_RESULTS_ID = 'search-results';
-const SEARCH_CONTAINER_SELECTOR = '.search';
 const POSTS_LIST_SELECTOR = '.posts-list';
 const FILTER_SELECTOR = '.filter';
-const SEARCH_TOGGLE_SELECTOR = '.header__search-toggle';
+const PAGINATION_SELECTOR = '.pagination';
 
 type SearchWindow = Window & {
   __SEARCH_CATEGORY_SEGMENTS__?: unknown;
@@ -237,8 +237,8 @@ const debounce = (callback: () => void, delay: number) => {
 
 export const initSearch = () => {
   const searchInput = document.querySelector<HTMLInputElement>(SEARCH_INPUT_SELECTOR);
-  const resultsContainer = document.getElementById(SEARCH_RESULTS_ID);
-  if (!searchInput || !resultsContainer) {
+  const searchForm = document.querySelector<HTMLFormElement>(SEARCH_FORM_SELECTOR);
+  if (!searchInput || !searchForm) {
     return;
   }
 
@@ -247,12 +247,34 @@ export const initSearch = () => {
   }
   searchInput.dataset.searchInit = 'true';
 
+  // Cmd/Ctrl+K focuses the header search box
+  document.addEventListener('keydown', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      searchInput.focus();
+      searchInput.select();
+    }
+  });
+
+  const resultsContainer = document.getElementById(SEARCH_RESULTS_ID);
+
+  // Pages without a post list: submitting goes to the home page (?q=...) and searches there
+  if (!resultsContainer) {
+    return;
+  }
+
   const postsListContainer = document.querySelector<HTMLElement>(POSTS_LIST_SELECTOR);
   const filterContainer = document.querySelector<HTMLElement>(FILTER_SELECTOR);
-  const searchContainer = document.querySelector<HTMLElement>(SEARCH_CONTAINER_SELECTOR);
-  const searchToggle = document.querySelector<HTMLButtonElement>(SEARCH_TOGGLE_SELECTOR);
+  const paginationContainer = document.querySelector<HTMLElement>(PAGINATION_SELECTOR);
 
   const config = getLocaleConfig();
+
+  const resetView = () => {
+    resetSearchView(resultsContainer, postsListContainer, filterContainer);
+    if (paginationContainer) {
+      paginationContainer.style.display = '';
+    }
+  };
 
   const showResults = (posts: SearchPost[], contextCategory: string | null) => {
     resultsContainer.style.display = 'block';
@@ -262,13 +284,16 @@ export const initSearch = () => {
     if (filterContainer) {
       filterContainer.style.display = 'none';
     }
+    if (paginationContainer) {
+      paginationContainer.style.display = 'none';
+    }
     renderResults(posts, resultsContainer, contextCategory);
   };
 
   const handleSearchTerm = async () => {
     const searchTerm = searchInput.value.trim().toLowerCase();
     if (!searchTerm) {
-      resetSearchView(resultsContainer, postsListContainer, filterContainer);
+      resetView();
       return;
     }
 
@@ -279,7 +304,7 @@ export const initSearch = () => {
       const filtered = posts.filter((post) => {
         const matchesLang = normalizeLanguage(post.lang, config) === lang;
         const matchesCategory = !category || post.category === category;
-        const content = `${post.title} ${post.content ?? ''}`.toLowerCase();
+        const content = `${post.title} ${post.content ?? ''} ${(post.tags ?? []).join(' ')}`.toLowerCase();
         const matchesTerm = content.includes(searchTerm);
         return matchesLang && matchesCategory && matchesTerm;
       });
@@ -290,39 +315,30 @@ export const initSearch = () => {
     }
   };
 
+  // On list pages results update while typing, so the form never navigates
+  searchForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    handleSearchTerm();
+  });
+
   searchInput.addEventListener('input', () => {
     debounce(handleSearchTerm, 300);
   });
 
-  if (searchToggle && searchContainer) {
-    searchContainer.classList.toggle('hidden', true);
-    resultsContainer.style.display = 'none';
-
-    if (searchToggle.dataset.searchToggleInit !== 'true') {
-      searchToggle.dataset.searchToggleInit = 'true';
-      document.addEventListener('keydown', (event) => {
-        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
-          event.preventDefault();
-          if (searchContainer.classList.contains('hidden')) {
-            searchToggle.click();
-          } else {
-            searchInput.focus();
-          }
-        }
-      });
-
-      searchToggle.addEventListener('click', () => {
-        const isHidden = searchContainer.classList.toggle('hidden');
-        if (isHidden) {
-          resetSearchView(resultsContainer, postsListContainer, filterContainer);
-          searchInput.value = '';
-        } else {
-          resultsContainer.style.display = 'none';
-          searchInput.focus();
-        }
-      });
+  searchInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      searchInput.value = '';
+      resetView();
+      searchInput.blur();
     }
-  }
+  });
 
-  resetSearchView(resultsContainer, postsListContainer, filterContainer);
+  resetView();
+
+  // Arrived from another page's search box (?q=...)
+  const initialQuery = new URLSearchParams(window.location.search).get('q');
+  if (initialQuery) {
+    searchInput.value = initialQuery;
+    handleSearchTerm();
+  }
 };

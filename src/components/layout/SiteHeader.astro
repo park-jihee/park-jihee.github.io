@@ -50,11 +50,18 @@ const {
     </div>
     <div class="header__nav">
       {showSearch && (
-        <button type="button" class="header__search-toggle" aria-label="Toggle search">
+        <form class="header__search" role="search" action={homeHref} method="get">
           <Icon name="search" class="header__search-icon" />
-          <span class="header__search-label">검색</span>
+          <input
+            type="search"
+            name="q"
+            class="header__search-input"
+            placeholder="검색"
+            aria-label="검색"
+            autocomplete="off"
+          />
           <kbd class="header__search-kbd">⌘K</kbd>
-        </button>
+        </form>
       )}
       {enableDarkMode && (
         <button type="button" class="header__theme-mode-switcher theme-mode-switcher" data-mode="light" aria-label="Toggle theme">

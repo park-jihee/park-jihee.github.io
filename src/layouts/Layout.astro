@@ -270,7 +270,8 @@ function isPostListPage(): boolean {
   return categoryRegex.test(pathname);
 }
 
-const showSearch = isPostListPage();
+// Header search box is shown on every page; on pages without a post list, Enter goes to the home page results.
+const showSearch = siteConfig.features.search;
 
 const siteTitleLocalized =
   siteConfig.title[lang] ?? siteConfig.title[DEFAULT_LOCALE];
