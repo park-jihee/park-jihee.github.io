@@ -83,6 +83,21 @@ Odoo 개발을 시작하고 약 5년 동안은 AI의 도움 없이 개발해 왔
 
 예전에는 Odoo 컨퍼런스 참석자가 20명도 되지 않았던 것으로 기억하지만, 시간이 지나면서 행사 규모와 참석자도 많이 늘어났습니다.
 
+<figure>
+  <img src="/img/posts/odoo-6-years-retrospective/conference-2022.jpg" alt="2022년 Odoo 행사 현장" loading="lazy" />
+  <figcaption>2022년 Odoo 로드쇼</figcaption>
+</figure>
+
+<figure>
+  <img src="/img/posts/odoo-6-years-retrospective/conference-2024.jpg" alt="2024년 Odoo 행사 현장" loading="lazy" />
+  <figcaption>2024년 Odoo 행사</figcaption>
+</figure>
+
+<figure>
+  <img src="/img/posts/odoo-6-years-retrospective/conference-2026.jpg" alt="2026년 Odoo 행사 현장" loading="lazy" />
+  <figcaption>2026년 Odoo Business Show</figcaption>
+</figure>
+
 그동안 자료가 부족해 어려움을 겪었던 경험이 많았던 만큼, 앞으로 이 블로그에는 **Odoo 개발 과정에서 마주한 문제와 해결 방법을 중심으로 AI 활용 경험과 프로젝트 회고**를 기록하려고 합니다.
 
 제가 겪었던 시행착오가 다른 개발자들에게도 조금이나마 도움이 되었으면 좋겠습니다.
